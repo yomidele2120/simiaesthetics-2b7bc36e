@@ -1,7 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { ServiceCard } from "@/components/ServiceCard";
-import browsOmbre from "@/assets/brows-ombre.jpg";
-import browsLamination from "@/assets/brows-lamination.jpg";
+import lashClassic from "@/assets/lash-classic-1.jpg";
 
 const browServices = [
   {
@@ -9,14 +8,14 @@ const browServices = [
     name: "Ombré Brows",
     price: "₦40,000",
     description: "Soft shaded semi-permanent brows that create a beautiful, natural-looking gradient. The perfect solution for fuller, defined brows that last.",
-    image: browsOmbre,
+    image: lashClassic,
   },
   {
     id: "brow-tinting-lamination",
     name: "Brow Tinting & Lamination",
     price: "₦20,000",
     description: "Shape, lift, and define your brows. This treatment creates fuller-looking brows by setting hairs in place and adding color depth.",
-    image: browsLamination,
+    image: lashClassic,
   },
 ];
 

@@ -1,33 +1,33 @@
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery4 from "@/assets/gallery-4.jpg";
-import gallery5 from "@/assets/gallery-5.jpg";
-import gallery6 from "@/assets/gallery-6.jpg";
-import lashClassic from "@/assets/lash-classic.jpg";
-import lashHybrid from "@/assets/lash-hybrid.jpg";
-import lashVolume from "@/assets/lash-volume.jpg";
-import browsOmbre from "@/assets/brows-ombre.jpg";
-import tattooSmall from "@/assets/tattoo-small.jpg";
-import tattooBig from "@/assets/tattoo-big.jpg";
+// Lash images
+import lashClassic from "@/assets/lash-classic-1.jpg";
+import lashHybrid from "@/assets/lash-hybrid-1.jpg";
+import lashVolume from "@/assets/lash-volume-1.jpg";
+import lashMega from "@/assets/lash-mega-1.jpg";
+// Tattoo images
+import tattooSmall from "@/assets/tattoo-small-1.jpg";
+import tattooBodyArt from "@/assets/tattoo-body-art-1.jpg";
+import tattooScript from "@/assets/tattoo-script-1.jpg";
+import tattooName from "@/assets/tattoo-name-1.jpg";
+import tattooTribal from "@/assets/tattoo-tribal-1.jpg";
+import tattooThigh from "@/assets/tattoo-thigh-1.jpg";
 
-const categories = ["All", "Lashes", "Brows", "Tattoos"];
+const categories = ["All", "Lashes", "Tattoos"];
 
 const galleryItems = [
-  { image: gallery1, category: "Lashes", title: "Glamorous Lash Extensions" },
-  { image: gallery2, category: "Brows", title: "Perfect Microblading" },
-  { image: gallery3, category: "Tattoos", title: "Butterfly Ankle Tattoo" },
-  { image: gallery4, category: "Lashes", title: "Volume Lash Set" },
-  { image: gallery5, category: "Brows", title: "Ombré Brows Result" },
-  { image: gallery6, category: "Tattoos", title: "Fine Line Rose" },
-  { image: lashClassic, category: "Lashes", title: "Classic Lash Extensions" },
+  // Lash work
+  { image: lashVolume, category: "Lashes", title: "Volume Lash Extensions" },
+  { image: lashMega, category: "Lashes", title: "Mega Volume Set" },
+  { image: lashClassic, category: "Lashes", title: "Classic Lash Look" },
   { image: lashHybrid, category: "Lashes", title: "Hybrid Lash Set" },
-  { image: lashVolume, category: "Lashes", title: "Full Volume Lashes" },
-  { image: browsOmbre, category: "Brows", title: "Soft Ombré Brows" },
-  { image: tattooSmall, category: "Tattoos", title: "Minimalist Flower Tattoo" },
-  { image: tattooBig, category: "Tattoos", title: "Custom Butterfly Design" },
+  // Tattoo work
+  { image: tattooSmall, category: "Tattoos", title: "'With Love' Script" },
+  { image: tattooBodyArt, category: "Tattoos", title: "'Body of Art' Back Tattoo" },
+  { image: tattooScript, category: "Tattoos", title: "Script Lettering Tattoo" },
+  { image: tattooName, category: "Tattoos", title: "Custom Name Tattoo" },
+  { image: tattooTribal, category: "Tattoos", title: "Tribal Back Design" },
+  { image: tattooThigh, category: "Tattoos", title: "'With Love, Always' Thigh" },
 ];
 
 const Gallery = () => {
@@ -50,7 +50,7 @@ const Gallery = () => {
               Our Work — <span className="text-primary italic">Real Beauty Transformations</span>
             </h1>
             <p className="text-muted-foreground text-lg">
-              Browse through our portfolio of beautiful lash extensions, brows, and tattoo 
+              Browse through our portfolio of beautiful lash extensions and tattoo 
               work. See the artistry and attention to detail in every transformation.
             </p>
           </div>

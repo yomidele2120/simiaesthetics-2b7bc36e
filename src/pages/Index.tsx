@@ -3,22 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { MapPin, Sparkles, Heart, Star } from "lucide-react";
 import heroImage from "@/assets/hero-beauty.jpg";
-import lashClassic from "@/assets/lash-classic.jpg";
-import browsOmbre from "@/assets/brows-ombre.jpg";
-import tattooSmall from "@/assets/tattoo-small.jpg";
+import lashVolume from "@/assets/lash-volume-1.jpg";
+import lashClassic from "@/assets/lash-classic-1.jpg";
+import tattooSmall from "@/assets/tattoo-small-1.jpg";
 
 const services = [
   {
     title: "Lash Extensions",
     description: "From classic to mega volume, enhance your natural beauty with our premium lash services.",
-    image: lashClassic,
+    image: lashVolume,
     price: "From ₦13,000",
     link: "/lashes",
   },
   {
     title: "Brows",
     description: "Ombré brows, tinting & lamination for perfectly shaped, defined brows.",
-    image: browsOmbre,
+    image: lashClassic,
     price: "From ₦20,000",
     link: "/brows",
   },

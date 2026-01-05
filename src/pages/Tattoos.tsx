@@ -1,7 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { ServiceCard } from "@/components/ServiceCard";
-import tattooSmall from "@/assets/tattoo-small.jpg";
-import tattooBig from "@/assets/tattoo-big.jpg";
+import tattooSmall from "@/assets/tattoo-small-1.jpg";
+import tattooBig from "@/assets/tattoo-tribal-1.jpg";
 
 const tattooServices = [
   {

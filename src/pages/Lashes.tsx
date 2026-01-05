@@ -1,10 +1,9 @@
 import { Layout } from "@/components/Layout";
 import { ServiceCard } from "@/components/ServiceCard";
-import lashClassic from "@/assets/lash-classic.jpg";
-import lashHybrid from "@/assets/lash-hybrid.jpg";
-import lashVolume from "@/assets/lash-volume.jpg";
-import lashMega from "@/assets/lash-mega.jpg";
-import lashRefill from "@/assets/lash-refill.jpg";
+import lashClassic from "@/assets/lash-classic-1.jpg";
+import lashHybrid from "@/assets/lash-hybrid-1.jpg";
+import lashVolume from "@/assets/lash-volume-1.jpg";
+import lashMega from "@/assets/lash-mega-1.jpg";
 
 const lashServices = [
   {
@@ -40,7 +39,7 @@ const lashServices = [
     name: "Lash Refill",
     price: "₦5,000+",
     description: "Refill and maintenance service to keep your lashes looking fresh. Price varies depending on lash type and condition.",
-    image: lashRefill,
+    image: lashVolume,
   },
 ];
 
