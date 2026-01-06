@@ -19,7 +19,7 @@ export const Footer = () => {
             {/* Social Links */}
             <div className="flex items-center gap-4 mt-6">
               <a
-                href="https://tiktok.com/@simi_aethetic_"
+                href="https://tiktok.com/@simi_aesthetic_"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"

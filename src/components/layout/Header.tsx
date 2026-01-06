@@ -47,7 +47,7 @@ export const Header = () => {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
             <a
-              href="https://tiktok.com/@simi_aethetic_"
+              href="https://tiktok.com/@simi_aesthetic_"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
