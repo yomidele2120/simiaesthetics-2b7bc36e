@@ -14,7 +14,7 @@ import tattooName from "@/assets/tattoo-name-1.jpg";
 import tattooTribal from "@/assets/tattoo-tribal-1.jpg";
 import tattooThigh from "@/assets/tattoo-thigh-1.jpg";
 
-const categories = ["All", "Lashes", "Tattoos"];
+const categories = ["All", "Lashes/Brows", "Tattoos"];
 
 interface GalleryItem {
   image?: string;
@@ -25,11 +25,11 @@ interface GalleryItem {
 }
 
 const galleryItems: GalleryItem[] = [
-  // Lash work
-  { image: lashVolume, category: "Lashes", title: "Volume Lash Extensions", type: "image" },
-  { image: lashMega, category: "Lashes", title: "Mega Volume Set", type: "image" },
-  { image: lashClassic, category: "Lashes", title: "Classic Lash Look", type: "image" },
-  { image: lashHybrid, category: "Lashes", title: "Hybrid Lash Set", type: "image" },
+  // Lash/Brows work
+  { image: lashVolume, category: "Lashes/Brows", title: "Volume Lash Extensions", type: "image" },
+  { image: lashMega, category: "Lashes/Brows", title: "Mega Volume Set", type: "image" },
+  { image: lashClassic, category: "Lashes/Brows", title: "Classic Lash Look", type: "image" },
+  { image: lashHybrid, category: "Lashes/Brows", title: "Hybrid Lash Set", type: "image" },
   // Tattoo work - images
   { image: tattooSmall, category: "Tattoos", title: "'With Love' Script", type: "image" },
   { image: tattooBodyArt, category: "Tattoos", title: "'Body of Art' Back Tattoo", type: "image" },
