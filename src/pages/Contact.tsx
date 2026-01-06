@@ -129,7 +129,7 @@ const Contact = () => {
                 <div className="mt-8 pt-6 border-t border-border">
                   <p className="text-sm text-muted-foreground mb-4">Follow us on social media</p>
                   <a
-                    href="https://tiktok.com/@Simi_aesthetic"
+                    href="https://tiktok.com/@simi_aesthetic_"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors"
