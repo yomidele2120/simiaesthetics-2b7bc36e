@@ -14,7 +14,7 @@ import tattooName from "@/assets/tattoo-name-1.jpg";
 import tattooTribal from "@/assets/tattoo-tribal-1.jpg";
 import tattooThigh from "@/assets/tattoo-thigh-1.jpg";
 
-const categories = ["All", "Lashes", "Tattoos", "Videos"];
+const categories = ["All", "Lashes", "Tattoos"];
 
 interface GalleryItem {
   image?: string;
@@ -30,19 +30,19 @@ const galleryItems: GalleryItem[] = [
   { image: lashMega, category: "Lashes", title: "Mega Volume Set", type: "image" },
   { image: lashClassic, category: "Lashes", title: "Classic Lash Look", type: "image" },
   { image: lashHybrid, category: "Lashes", title: "Hybrid Lash Set", type: "image" },
-  // Tattoo work
+  // Tattoo work - images
   { image: tattooSmall, category: "Tattoos", title: "'With Love' Script", type: "image" },
   { image: tattooBodyArt, category: "Tattoos", title: "'Body of Art' Back Tattoo", type: "image" },
   { image: tattooScript, category: "Tattoos", title: "Script Lettering Tattoo", type: "image" },
   { image: tattooName, category: "Tattoos", title: "Custom Name Tattoo", type: "image" },
   { image: tattooTribal, category: "Tattoos", title: "Tribal Back Design", type: "image" },
   { image: tattooThigh, category: "Tattoos", title: "'With Love, Always' Thigh", type: "image" },
-  // Videos
-  { video: "/videos/gallery-video-1.mp4", category: "Videos", title: "Beauty Session", type: "video" },
-  { video: "/videos/gallery-video-2.mp4", category: "Videos", title: "Lash Application", type: "video" },
-  { video: "/videos/gallery-video-3.mp4", category: "Videos", title: "Studio Moments", type: "video" },
-  { video: "/videos/gallery-video-4.mp4", category: "Videos", title: "Transformation", type: "video" },
-  { video: "/videos/gallery-video-5.mp4", category: "Videos", title: "Behind The Scenes", type: "video" },
+  // Tattoo work - videos
+  { video: "/videos/gallery-video-1.mp4", category: "Tattoos", title: "Tattoo Session", type: "video" },
+  { video: "/videos/gallery-video-2.mp4", category: "Tattoos", title: "Tattoo Application", type: "video" },
+  { video: "/videos/gallery-video-3.mp4", category: "Tattoos", title: "Studio Moments", type: "video" },
+  { video: "/videos/gallery-video-4.mp4", category: "Tattoos", title: "Tattoo Transformation", type: "video" },
+  { video: "/videos/gallery-video-5.mp4", category: "Tattoos", title: "Behind The Scenes", type: "video" },
 ];
 
 const Gallery = () => {
