@@ -79,7 +79,7 @@ const Index = () => {
     }
   };
 
-  // Auto-scroll effect
+  // Auto-scroll effect - very slow and endless
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -87,13 +87,13 @@ const Index = () => {
     const autoScroll = setInterval(() => {
       const maxScrollLeft = container.scrollWidth - container.clientWidth;
       
-      if (container.scrollLeft >= maxScrollLeft - 10) {
-        // Reset to beginning when reaching end
-        container.scrollTo({ left: 0, behavior: "smooth" });
+      if (container.scrollLeft >= maxScrollLeft) {
+        // Seamlessly reset to beginning
+        container.scrollLeft = 0;
       } else {
-        container.scrollBy({ left: 1, behavior: "auto" });
+        container.scrollLeft += 0.5;
       }
-    }, 30);
+    }, 50);
 
     return () => clearInterval(autoScroll);
   }, []);
@@ -232,14 +232,15 @@ const Index = () => {
           {/* Sliding Gallery */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 scroll-smooth snap-x snap-mandatory"
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {galleryPreview.map((item, index) => (
+            {/* Duplicate items for seamless infinite loop */}
+            {[...galleryPreview, ...galleryPreview].map((item, index) => (
               <Link
                 key={index}
                 to="/gallery"
-                className="group relative flex-shrink-0 w-72 aspect-[3/4] overflow-hidden rounded-2xl snap-start"
+                className="group relative flex-shrink-0 w-72 aspect-[3/4] overflow-hidden rounded-2xl"
               >
                 <img
                   src={item.image}
