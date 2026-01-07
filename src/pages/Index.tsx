@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
-import { MapPin, Sparkles, Heart, Star } from "lucide-react";
+import { MapPin, Sparkles, Heart, Star, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { useRef } from "react";
 import heroImage from "@/assets/hero-beauty.jpg";
 import lashVolume from "@/assets/lash-volume-1.jpg";
 import lashClassic from "@/assets/lash-classic-1.jpg";
+import lashHybrid from "@/assets/lash-hybrid-1.jpg";
+import lashMega from "@/assets/lash-mega-1.jpg";
 import tattooSmall from "@/assets/tattoo-small-1.jpg";
+import tattooBodyArt from "@/assets/tattoo-body-art-1.jpg";
+import tattooScript from "@/assets/tattoo-script-1.jpg";
+import tattooName from "@/assets/tattoo-name-1.jpg";
 
 const services = [
   {
@@ -49,7 +55,30 @@ const features = [
   },
 ];
 
+const galleryPreview = [
+  { image: lashVolume, title: "Volume Lash Extensions", category: "Lashes/Brows" },
+  { image: lashMega, title: "Mega Volume Set", category: "Lashes/Brows" },
+  { image: lashClassic, title: "Classic Lash Look", category: "Lashes/Brows" },
+  { image: lashHybrid, title: "Hybrid Lash Set", category: "Lashes/Brows" },
+  { image: tattooSmall, title: "'With Love' Script", category: "Tattoos" },
+  { image: tattooBodyArt, title: "'Body of Art' Back Tattoo", category: "Tattoos" },
+  { image: tattooScript, title: "Script Lettering Tattoo", category: "Tattoos" },
+  { image: tattooName, title: "Custom Name Tattoo", category: "Tattoos" },
+];
+
 const Index = () => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 320;
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -146,6 +175,75 @@ const Index = () => {
               <Button variant="outline" size="lg">
                 View Our Work
               </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Preview */}
+      <section id="gallery" className="py-20 lg:py-28">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <span className="inline-block text-primary font-medium text-sm tracking-wider uppercase mb-3">
+                Our Portfolio
+              </span>
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground">
+                See Our Work
+              </h2>
+            </div>
+            <div className="hidden sm:flex items-center gap-3">
+              <button
+                onClick={() => scroll("left")}
+                className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                aria-label="Previous"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                aria-label="Next"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Sliding Gallery */}
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 scroll-smooth snap-x snap-mandatory"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {galleryPreview.map((item, index) => (
+              <Link
+                key={index}
+                to="/gallery"
+                className="group relative flex-shrink-0 w-72 aspect-[3/4] overflow-hidden rounded-2xl snap-start"
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-0 left-0 right-0 p-5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                  <span className="text-primary text-xs font-medium uppercase tracking-wider">
+                    {item.category}
+                  </span>
+                  <h3 className="text-white font-heading text-lg font-medium mt-1">
+                    {item.title}
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link to="/gallery" className="inline-flex items-center gap-2 text-primary font-medium hover:gap-4 transition-all duration-300">
+              View Full Gallery
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
