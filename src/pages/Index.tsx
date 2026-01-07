@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { MapPin, Sparkles, Heart, Star, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import heroImage from "@/assets/hero-beauty.jpg";
 import lashVolume from "@/assets/lash-volume-1.jpg";
 import lashClassic from "@/assets/lash-classic-1.jpg";
@@ -78,6 +78,25 @@ const Index = () => {
       });
     }
   };
+
+  // Auto-scroll effect
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const autoScroll = setInterval(() => {
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      
+      if (container.scrollLeft >= maxScrollLeft - 10) {
+        // Reset to beginning when reaching end
+        container.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        container.scrollBy({ left: 1, behavior: "auto" });
+      }
+    }, 30);
+
+    return () => clearInterval(autoScroll);
+  }, []);
 
   return (
     <Layout>
