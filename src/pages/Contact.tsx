@@ -39,8 +39,8 @@ const Contact = () => {
                     <div>
                       <h3 className="font-heading text-lg font-semibold text-foreground mb-2">Location</h3>
                       <p className="text-muted-foreground">
-                        15 Ekoro Road,<br />
-                        Abule Egba, Lagos
+                       Abule Egba, Off Ekoro Road,<br />
+                       Command Bus Stop, Lagos, Nigeria
                       </p>
                     </div>
                   </div>

@@ -2,10 +2,13 @@ import { Layout } from "@/components/Layout";
 import { useState, useEffect, useCallback } from "react";
 import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
 // Lash images
-import lashClassic from "@/assets/lash-classic-1.jpg";
-import lashHybrid from "@/assets/lash-hybrid-1.jpg";
-import lashVolume from "@/assets/lash-volume-1.jpg";
-import lashMega from "@/assets/lash-mega-1.jpg";
+import lashClassic from "@/assets/lash-classic.jpg";
+import lashHybrid from "@/assets/lash-hybrid.jpg";
+import lashVolume from "@/assets/lash-volume.jpg";
+import lashMega from "@/assets/lash-mega.jpg";
+import lashWispy from "@/assets/lash-wispy.jpg";
+import lashCustomized from "@/assets/lash-customized.jpg";
+import lashCluster from "@/assets/lash-cluster.jpg";
 // Tattoo images
 import tattooSmall from "@/assets/tattoo-small-1.jpg";
 import tattooBodyArt from "@/assets/tattoo-body-art-1.jpg";
@@ -13,6 +16,9 @@ import tattooScript from "@/assets/tattoo-script-1.jpg";
 import tattooName from "@/assets/tattoo-name-1.jpg";
 import tattooTribal from "@/assets/tattoo-tribal-1.jpg";
 import tattooThigh from "@/assets/tattoo-thigh-1.jpg";
+import tattooNeck from "@/assets/tattoo-neck.jpg";
+import tattooBodyNew from "@/assets/tattoo-body.jpg";
+import tattooThighNew from "@/assets/tattoo-thigh-new.jpg";
 
 const categories = ["All", "Lashes/Brows", "Tattoos"];
 
@@ -26,18 +32,28 @@ interface GalleryItem {
 
 const galleryItems: GalleryItem[] = [
   // Lash/Brows work
-  { image: lashVolume, category: "Lashes/Brows", title: "Volume Lash Extensions", type: "image" },
+  { image: lashClassic, category: "Lashes/Brows", title: "Classic Lashes", type: "image" },
+  { image: lashHybrid, category: "Lashes/Brows", title: "Full Glam Hybrid", type: "image" },
+  { image: lashVolume, category: "Lashes/Brows", title: "Volume Close-Up", type: "image" },
   { image: lashMega, category: "Lashes/Brows", title: "Mega Volume Set", type: "image" },
-  { image: lashClassic, category: "Lashes/Brows", title: "Classic Lash Look", type: "image" },
-  { image: lashHybrid, category: "Lashes/Brows", title: "Hybrid Lash Set", type: "image" },
+  { image: lashWispy, category: "Lashes/Brows", title: "Wispy Lashes", type: "image" },
+  { image: lashCustomized, category: "Lashes/Brows", title: "Customized Set", type: "image" },
+  { image: lashCluster, category: "Lashes/Brows", title: "Cluster Lashes", type: "image" },
+  // Lash videos
+  { video: "/videos/lash-video-1.mp4", category: "Lashes/Brows", title: "Lash Application", type: "video" },
+  { video: "/videos/lash-video-2.mp4", category: "Lashes/Brows", title: "Lash Reveal", type: "video" },
+  { video: "/videos/lash-video-3.mp4", category: "Lashes/Brows", title: "Lash Styling", type: "video" },
   // Tattoo work - images
+  { image: tattooNeck, category: "Tattoos", title: "'Beautiful Mind' Neck", type: "image" },
+  { image: tattooBodyNew, category: "Tattoos", title: "Script Side Tattoo", type: "image" },
+  { image: tattooThighNew, category: "Tattoos", title: "Thigh Script", type: "image" },
   { image: tattooSmall, category: "Tattoos", title: "'With Love' Script", type: "image" },
   { image: tattooBodyArt, category: "Tattoos", title: "'Body of Art' Back Tattoo", type: "image" },
   { image: tattooScript, category: "Tattoos", title: "Script Lettering Tattoo", type: "image" },
   { image: tattooName, category: "Tattoos", title: "Custom Name Tattoo", type: "image" },
   { image: tattooTribal, category: "Tattoos", title: "Tribal Back Design", type: "image" },
   { image: tattooThigh, category: "Tattoos", title: "'With Love, Always' Thigh", type: "image" },
-  // Tattoo work - videos
+  // Tattoo videos
   { video: "/videos/gallery-video-1.mp4", category: "Tattoos", title: "Tattoo Session", type: "video" },
   { video: "/videos/gallery-video-2.mp4", category: "Tattoos", title: "Tattoo Application", type: "video" },
   { video: "/videos/gallery-video-3.mp4", category: "Tattoos", title: "Studio Moments", type: "video" },
