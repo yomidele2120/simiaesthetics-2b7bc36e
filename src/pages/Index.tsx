@@ -107,7 +107,7 @@ const Index = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center">
+      <section className="relative min-h-[90vh] flex items-end lg:items-center">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
@@ -115,20 +115,22 @@ const Index = () => {
             alt="Simi Aesthetic Beauty"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
+          {/* Strong bottom-to-top scrim so text is legible on any photo */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#3a2418]/95 via-[#3a2418]/70 to-[#3a2418]/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#3a2418]/60 via-transparent to-transparent hidden lg:block" />
         </div>
 
         {/* Content */}
         <div className="container mx-auto px-4 lg:px-8 relative z-10">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl py-16 lg:py-0">
             <span className="inline-block text-primary font-medium text-sm tracking-wider uppercase mb-4 animate-fade-in">
               Welcome to Simi Aesthetic
             </span>
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground leading-tight mb-6 animate-slide-up">
+            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-semibold text-white leading-tight mb-6 animate-slide-up">
               Enhancing Your Beauty With A{" "}
               <span className="text-primary italic">Soft & Timeless</span> Touch
             </h1>
-            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed mb-8 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+            <p className="text-white/85 text-lg md:text-xl leading-relaxed mb-8 animate-slide-up" style={{ animationDelay: "0.1s" }}>
               Premium lash extensions, brows, and tattoo services in Lagos. 
               Experience luxury beauty care designed to enhance your natural elegance.
             </p>
@@ -290,8 +292,24 @@ const Index = () => {
             </p>
           </div>
 
+          {/* Stats bar */}
+          <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto mb-12 p-6 md:p-8 rounded-2xl bg-primary/5 border border-primary/10">
+            <div className="text-center">
+              <div className="font-heading text-2xl md:text-4xl font-semibold text-primary">500+</div>
+              <div className="text-xs md:text-sm text-muted-foreground mt-1">Happy Clients</div>
+            </div>
+            <div className="text-center border-x border-primary/10">
+              <div className="font-heading text-2xl md:text-4xl font-semibold text-primary">5★</div>
+              <div className="text-xs md:text-sm text-muted-foreground mt-1">Rated Service</div>
+            </div>
+            <div className="text-center">
+              <div className="font-heading text-2xl md:text-4xl font-semibold text-primary">3+</div>
+              <div className="text-xs md:text-sm text-muted-foreground mt-1">Years of Artistry</div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
+            {features.map((feature) => (
               <div
                 key={feature.title}
                 className="text-center p-8 rounded-2xl bg-secondary/30 hover:bg-secondary/50 transition-all duration-300"
