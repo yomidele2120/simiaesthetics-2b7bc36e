@@ -49,9 +49,9 @@ const galleryItems: GalleryItem[] = [
   { image: lashCustomized, category: "Lashes/Brows", title: "Customized Set", type: "image" },
   { image: lashCluster, category: "Lashes/Brows", title: "Cluster Lashes", type: "image" },
   // Lash videos
-  { video: "/videos/lash-video-1.mp4", category: "Lashes/Brows", title: "Lash Application", type: "video" },
-  { video: "/videos/lash-video-2.mp4", category: "Lashes/Brows", title: "Lash Reveal", type: "video" },
-  { video: "/videos/lash-video-3.mp4", category: "Lashes/Brows", title: "Lash Styling", type: "video" },
+  { video: lashVid1.url, category: "Lashes/Brows", title: "Lash Application", type: "video" },
+  { video: lashVid2.url, category: "Lashes/Brows", title: "Lash Reveal", type: "video" },
+  { video: lashVid3.url, category: "Lashes/Brows", title: "Lash Styling", type: "video" },
   // Tattoo work - images
   { image: tattooNeck, category: "Tattoos", title: "'Beautiful Mind' Neck", type: "image" },
   { image: tattooBodyNew, category: "Tattoos", title: "Script Side Tattoo", type: "image" },
