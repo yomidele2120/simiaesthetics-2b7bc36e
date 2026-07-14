@@ -1,6 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { ServiceCard } from "@/components/ServiceCard";
-import lashClassic from "@/assets/lash-classic-1.jpg";
+import lashClassic from "@/assets/lash-classic.jpg";
 
 const browServices = [
   {
