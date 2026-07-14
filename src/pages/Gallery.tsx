@@ -20,6 +20,15 @@ import tattooNeck from "@/assets/tattoo-neck.jpg";
 import tattooBodyNew from "@/assets/tattoo-body.jpg";
 import tattooThighNew from "@/assets/tattoo-thigh-new.jpg";
 
+const lashVid1 = { url: "/__l5e/assets-v1/d4d08593-4acc-4eba-bb94-a57d11e6d77f/lash-video-1.mp4" };
+const lashVid2 = { url: "/__l5e/assets-v1/cd21c5f5-20dd-468e-95ad-4072e34b5383/lash-video-2.mp4" };
+const lashVid3 = { url: "/__l5e/assets-v1/289fad0f-21c5-4421-a5ce-2d304977640f/lash-video-3.mp4" };
+const galVid1 = { url: "/__l5e/assets-v1/60e3b22e-449c-4a20-a10e-3006a4a772d8/gallery-video-1.mp4" };
+const galVid2 = { url: "/__l5e/assets-v1/c560ed5c-efe8-4583-8a01-cc54bd69be2b/gallery-video-2.mp4" };
+const galVid3 = { url: "/__l5e/assets-v1/cf615daa-2838-41b3-a56f-73d74ac83d31/gallery-video-3.mp4" };
+const galVid4 = { url: "/__l5e/assets-v1/ef39da3c-018b-4913-90e7-be3eb8ec2e93/gallery-video-4.mp4" };
+const galVid5 = { url: "/__l5e/assets-v1/75601d4f-098c-420a-984d-c339d6300e49/gallery-video-5.mp4" };
+
 const categories = ["All", "Lashes/Brows", "Tattoos"];
 
 interface GalleryItem {
@@ -40,9 +49,9 @@ const galleryItems: GalleryItem[] = [
   { image: lashCustomized, category: "Lashes/Brows", title: "Customized Set", type: "image" },
   { image: lashCluster, category: "Lashes/Brows", title: "Cluster Lashes", type: "image" },
   // Lash videos
-  { video: "/videos/lash-video-1.mp4", category: "Lashes/Brows", title: "Lash Application", type: "video" },
-  { video: "/videos/lash-video-2.mp4", category: "Lashes/Brows", title: "Lash Reveal", type: "video" },
-  { video: "/videos/lash-video-3.mp4", category: "Lashes/Brows", title: "Lash Styling", type: "video" },
+  { video: lashVid1.url, category: "Lashes/Brows", title: "Lash Application", type: "video" },
+  { video: lashVid2.url, category: "Lashes/Brows", title: "Lash Reveal", type: "video" },
+  { video: lashVid3.url, category: "Lashes/Brows", title: "Lash Styling", type: "video" },
   // Tattoo work - images
   { image: tattooNeck, category: "Tattoos", title: "'Beautiful Mind' Neck", type: "image" },
   { image: tattooBodyNew, category: "Tattoos", title: "Script Side Tattoo", type: "image" },
@@ -54,11 +63,11 @@ const galleryItems: GalleryItem[] = [
   { image: tattooTribal, category: "Tattoos", title: "Tribal Back Design", type: "image" },
   { image: tattooThigh, category: "Tattoos", title: "'With Love, Always' Thigh", type: "image" },
   // Tattoo videos
-  { video: "/videos/gallery-video-1.mp4", category: "Tattoos", title: "Tattoo Session", type: "video" },
-  { video: "/videos/gallery-video-2.mp4", category: "Tattoos", title: "Tattoo Application", type: "video" },
-  { video: "/videos/gallery-video-3.mp4", category: "Tattoos", title: "Studio Moments", type: "video" },
-  { video: "/videos/gallery-video-4.mp4", category: "Tattoos", title: "Tattoo Transformation", type: "video" },
-  { video: "/videos/gallery-video-5.mp4", category: "Tattoos", title: "Behind The Scenes", type: "video" },
+  { video: galVid1.url, category: "Tattoos", title: "Tattoo Session", type: "video" },
+  { video: galVid2.url, category: "Tattoos", title: "Tattoo Application", type: "video" },
+  { video: galVid3.url, category: "Tattoos", title: "Studio Moments", type: "video" },
+  { video: galVid4.url, category: "Tattoos", title: "Tattoo Transformation", type: "video" },
+  { video: galVid5.url, category: "Tattoos", title: "Behind The Scenes", type: "video" },
 ];
 
 const Gallery = () => {
