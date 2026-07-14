@@ -20,6 +20,15 @@ import tattooNeck from "@/assets/tattoo-neck.jpg";
 import tattooBodyNew from "@/assets/tattoo-body.jpg";
 import tattooThighNew from "@/assets/tattoo-thigh-new.jpg";
 
+import lashVid1 from "/public/videos/lash-video-1.mp4.asset.json";
+import lashVid2 from "/public/videos/lash-video-2.mp4.asset.json";
+import lashVid3 from "/public/videos/lash-video-3.mp4.asset.json";
+import galVid1 from "/public/videos/gallery-video-1.mp4.asset.json";
+import galVid2 from "/public/videos/gallery-video-2.mp4.asset.json";
+import galVid3 from "/public/videos/gallery-video-3.mp4.asset.json";
+import galVid4 from "/public/videos/gallery-video-4.mp4.asset.json";
+import galVid5 from "/public/videos/gallery-video-5.mp4.asset.json";
+
 const categories = ["All", "Lashes/Brows", "Tattoos"];
 
 interface GalleryItem {
