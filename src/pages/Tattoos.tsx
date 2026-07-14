@@ -7,15 +7,15 @@ const tattooServices = [
   {
     id: "small-tattoo",
     name: "Small Tattoo",
-    price: "₦15,000",
-    description: "Minimalist small pieces perfect for first-timers or those who love delicate, subtle designs. Ideal for fingers, wrists, ankles, or behind the ear.",
+    price: "From ₦15,000",
+    description: "Minimalist small pieces perfect for first-timers or those who love delicate, subtle designs. Ideal for fingers, wrists, ankles, or behind the ear. Final price depends on size and complexity.",
     image: tattooSmall,
   },
   {
     id: "big-tattoo",
     name: "Big Tattoo",
-    price: "₦25,000",
-    description: "Larger custom designs for a bold statement. Perfect for arms, shoulders, back, or thighs. Price may vary based on complexity and size.",
+    price: "From ₦25,000",
+    description: "Larger custom designs for a bold statement. Perfect for arms, shoulders, back, or thighs. Final price depends on size and complexity.",
     image: tattooBig,
   },
 ];

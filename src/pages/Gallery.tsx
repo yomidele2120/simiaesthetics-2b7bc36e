@@ -166,12 +166,12 @@ const Gallery = () => {
       {/* Gallery Grid */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-5">
             {filteredItems.map((item, index) => (
               <div
                 key={index}
                 onClick={() => openLightbox(index)}
-                className="group relative aspect-square overflow-hidden rounded-xl cursor-pointer"
+                className="group relative aspect-[4/5] overflow-hidden rounded-xl cursor-pointer"
               >
                 {item.type === "video" ? (
                   <>
