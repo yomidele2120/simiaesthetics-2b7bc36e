@@ -63,11 +63,11 @@ const galleryItems: GalleryItem[] = [
   { image: tattooTribal, category: "Tattoos", title: "Tribal Back Design", type: "image" },
   { image: tattooThigh, category: "Tattoos", title: "'With Love, Always' Thigh", type: "image" },
   // Tattoo videos
-  { video: "/videos/gallery-video-1.mp4", category: "Tattoos", title: "Tattoo Session", type: "video" },
-  { video: "/videos/gallery-video-2.mp4", category: "Tattoos", title: "Tattoo Application", type: "video" },
-  { video: "/videos/gallery-video-3.mp4", category: "Tattoos", title: "Studio Moments", type: "video" },
-  { video: "/videos/gallery-video-4.mp4", category: "Tattoos", title: "Tattoo Transformation", type: "video" },
-  { video: "/videos/gallery-video-5.mp4", category: "Tattoos", title: "Behind The Scenes", type: "video" },
+  { video: galVid1.url, category: "Tattoos", title: "Tattoo Session", type: "video" },
+  { video: galVid2.url, category: "Tattoos", title: "Tattoo Application", type: "video" },
+  { video: galVid3.url, category: "Tattoos", title: "Studio Moments", type: "video" },
+  { video: galVid4.url, category: "Tattoos", title: "Tattoo Transformation", type: "video" },
+  { video: galVid5.url, category: "Tattoos", title: "Behind The Scenes", type: "video" },
 ];
 
 const Gallery = () => {
