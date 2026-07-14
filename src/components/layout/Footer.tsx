@@ -85,7 +85,7 @@ export const Footer = () => {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  15 Ekoro Road, Abule Egba, Lagos
+                  Abule Egba, Off Ekoro Road, Command Bus Stop, Lagos, Nigeria
                 </span>
               </div>
               <a href="tel:09152581489" className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors">

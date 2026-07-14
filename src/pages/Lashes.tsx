@@ -1,47 +1,72 @@
 import { Layout } from "@/components/Layout";
 import { ServiceCard } from "@/components/ServiceCard";
-import lashClassic from "@/assets/lash-classic-1.jpg";
-import lashHybrid from "@/assets/lash-hybrid-1.jpg";
-import lashVolume from "@/assets/lash-volume-1.jpg";
-import lashMega from "@/assets/lash-mega-1.jpg";
+import lashClassic from "@/assets/lash-classic.jpg";
+import lashHybrid from "@/assets/lash-hybrid.jpg";
+import lashVolume from "@/assets/lash-volume.jpg";
+import lashMega from "@/assets/lash-mega.jpg";
+import lashWispy from "@/assets/lash-wispy.jpg";
+import lashCustomized from "@/assets/lash-customized.jpg";
+import lashCluster from "@/assets/lash-cluster.jpg";
+import lashRefill from "@/assets/lash-refill.jpg";
 
-const lashServices = [
-  {
-    id: "classic-set",
-    name: "Classic Set",
-    price: "₦13,000",
-    description: "Natural soft everyday lashes. Perfect for a subtle, elegant enhancement that adds length and definition to your natural lashes.",
-    image: lashClassic,
-  },
-  {
-    id: "hybrid-set",
-    name: "Hybrid Set",
-    price: "₦17,000",
-    description: "The perfect blend of classic and volume lashes. Ideal for those wanting more fullness while maintaining a natural look.",
-    image: lashHybrid,
-  },
-  {
-    id: "volume-set",
-    name: "Volume",
-    price: "₦22,000",
-    description: "Full, thick lash look that creates stunning, dramatic eyes. Multiple lightweight lashes applied to each natural lash.",
-    image: lashVolume,
-  },
-  {
-    id: "mega-volume",
-    name: "Mega Volume",
-    price: "₦30,000",
-    description: "Ultra glamorous dramatic volume for the most intense, bold look. Maximum fullness and dimension for special occasions.",
-    image: lashMega,
-  },
-  {
-    id: "lash-refill",
-    name: "Lash Refill",
-    price: "₦5,000+",
-    description: "Refill and maintenance service to keep your lashes looking fresh. Price varies depending on lash type and condition.",
-    image: lashVolume,
-  },
+type Service = {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  image: string;
+};
+
+const normalSet: Service[] = [
+  { id: "normal-classic", name: "Classic", price: "₦13,000", description: "Natural, soft everyday lashes with one extension per natural lash.", image: lashClassic },
+  { id: "normal-hybrid", name: "Hybrid", price: "₦17,000", description: "A blend of classic and volume for a fuller yet natural finish.", image: lashHybrid },
+  { id: "normal-volume", name: "Volume", price: "₦23,000", description: "Full, fluffy lashes for a beautifully dense look.", image: lashVolume },
+  { id: "normal-mega", name: "Mega Volume", price: "₦30,000", description: "Ultra dramatic, high-density lashes for maximum impact.", image: lashMega },
 ];
+
+const customizedSet: Service[] = [
+  { id: "custom-classic", name: "Classic", price: "₦15,000", description: "Custom-mapped classic set tailored to your eye shape.", image: lashClassic },
+  { id: "custom-hybrid", name: "Hybrid", price: "₦25,000", description: "Customized hybrid styling for a signature soft-glam look.", image: lashCustomized },
+  { id: "custom-volume", name: "Volume", price: "₦35,000", description: "Premium hand-crafted volume fans tailored to you.", image: lashVolume },
+];
+
+const clusterSet: Service[] = [
+  { id: "cluster-classic", name: "Classic", price: "₦8,000", description: "Affordable cluster lashes for a quick classic look.", image: lashCluster },
+  { id: "cluster-hybrid", name: "Hybrid", price: "₦12,000", description: "Cluster hybrid — fuller than classic, budget-friendly.", image: lashCluster },
+  { id: "cluster-volume", name: "Volume", price: "₦15,000", description: "Voluminous cluster set for a bold statement.", image: lashVolume },
+  { id: "cluster-mega", name: "Mega Volume", price: "₦20,000", description: "The most dramatic cluster lash option.", image: lashMega },
+];
+
+const extras: Service[] = [
+  { id: "extra-refill", name: "Refill", price: "₦5,000", description: "Top-up service to maintain your existing lash set.", image: lashRefill },
+  { id: "extra-under-eyes", name: "Under Eyes", price: "₦5,000", description: "Under-eye lash placement for a doll-eye effect.", image: lashWispy },
+  { id: "extra-wispy", name: "Wispy", price: "₦5,000", description: "Wispy spikes add texture and a fluttery finish.", image: lashWispy },
+  { id: "extra-removal", name: "Removal", price: "₦5,000", description: "Safe professional removal of your lash extensions.", image: lashRefill },
+];
+
+const Section = ({ title, subtitle, services }: { title: string; subtitle: string; services: Service[] }) => (
+  <div className="mb-16 last:mb-0">
+    <div className="mb-8 text-center">
+      <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground">
+        {title}
+      </h2>
+      <p className="text-muted-foreground mt-2">{subtitle}</p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      {services.map((service) => (
+        <ServiceCard
+          key={service.id}
+          serviceId={service.id}
+          category="lashes"
+          name={service.name}
+          price={service.price}
+          description={service.description}
+          image={service.image}
+        />
+      ))}
+    </div>
+  </div>
+);
 
 const Lashes = () => {
   return (
@@ -57,29 +82,20 @@ const Lashes = () => {
               Beautiful Lashes, <span className="text-primary italic">Effortlessly</span>
             </h1>
             <p className="text-muted-foreground text-lg">
-              Wake up every day with perfectly curled, voluminous lashes. Our expert lash artist 
-              creates customized looks to enhance your natural beauty.
+              Choose from our full range of lash services — from natural classic sets
+              to bold mega volume, cluster options, and customized styling.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Services Grid */}
+      {/* Services */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {lashServices.map((service) => (
-              <ServiceCard
-                key={service.id}
-                serviceId={service.id}
-                category="lashes"
-                name={service.name}
-                price={service.price}
-                description={service.description}
-                image={service.image}
-              />
-            ))}
-          </div>
+          <Section title="Normal Set" subtitle="Our signature full sets — professionally applied, lash-by-lash." services={normalSet} />
+          <Section title="Customized Set" subtitle="Tailored designs mapped to your eyes and style." services={customizedSet} />
+          <Section title="Cluster Lash" subtitle="Beautiful, budget-friendly cluster application." services={clusterSet} />
+          <Section title="Extras" subtitle="Add-ons and maintenance — all at ₦5,000." services={extras} />
         </div>
       </section>
 

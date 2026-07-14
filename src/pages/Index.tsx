@@ -4,10 +4,14 @@ import { Layout } from "@/components/Layout";
 import { MapPin, Sparkles, Heart, Star, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { useRef, useEffect } from "react";
 import heroImage from "@/assets/hero-beauty.jpg";
-import lashVolume from "@/assets/lash-volume-1.jpg";
-import lashClassic from "@/assets/lash-classic-1.jpg";
-import lashHybrid from "@/assets/lash-hybrid-1.jpg";
-import lashMega from "@/assets/lash-mega-1.jpg";
+import lashVolume from "@/assets/lash-volume.jpg";
+import lashClassic from "@/assets/lash-classic.jpg";
+import lashHybrid from "@/assets/lash-hybrid.jpg";
+import lashMega from "@/assets/lash-mega.jpg";
+import lashWispy from "@/assets/lash-wispy.jpg";
+import tattooNeck from "@/assets/tattoo-neck.jpg";
+import tattooBodyNew from "@/assets/tattoo-body.jpg";
+import tattooThighNew from "@/assets/tattoo-thigh-new.jpg";
 import tattooSmall from "@/assets/tattoo-small-1.jpg";
 import tattooBodyArt from "@/assets/tattoo-body-art-1.jpg";
 import tattooScript from "@/assets/tattoo-script-1.jpg";
@@ -57,13 +61,15 @@ const features = [
 
 const galleryPreview = [
   { image: lashVolume, title: "Volume Lash Extensions", category: "Lashes/Brows" },
-  { image: lashMega, title: "Mega Volume Set", category: "Lashes/Brows" },
+  { image: lashMega, title: "Full Glam Lashes", category: "Lashes/Brows" },
   { image: lashClassic, title: "Classic Lash Look", category: "Lashes/Brows" },
   { image: lashHybrid, title: "Hybrid Lash Set", category: "Lashes/Brows" },
+  { image: lashWispy, title: "Wispy Lashes", category: "Lashes/Brows" },
+  { image: tattooNeck, title: "'Beautiful Mind' Neck", category: "Tattoos" },
+  { image: tattooBodyNew, title: "Script Side Tattoo", category: "Tattoos" },
+  { image: tattooThighNew, title: "Thigh Script Tattoo", category: "Tattoos" },
   { image: tattooSmall, title: "'With Love' Script", category: "Tattoos" },
-  { image: tattooBodyArt, title: "'Body of Art' Back Tattoo", category: "Tattoos" },
-  { image: tattooScript, title: "Script Lettering Tattoo", category: "Tattoos" },
-  { image: tattooName, title: "Custom Name Tattoo", category: "Tattoos" },
+  { image: tattooBodyArt, title: "'Body of Art' Back", category: "Tattoos" },
 ];
 
 const Index = () => {
@@ -312,7 +318,7 @@ const Index = () => {
               <span className="font-medium">Visit Us</span>
             </div>
             <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">
-              15 Ekoro Road, Abule Egba
+              Abule Egba, Off Ekoro Road, Command Bus Stop, Lagos
             </h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
               Come experience premium beauty services in our welcoming studio. 
