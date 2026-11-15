@@ -71,3 +71,10 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Redesign notes (Nov 2026)
+
+- **Prices & services** live in one file: `src/data/services.ts`. Change a price there and it updates the home page price list, the Lashes/Brows/Tattoos pages and the booking form.
+- **Gallery** items live in `src/data/gallery.ts` (new photos in `src/assets/work/`, new videos in `public/videos/`).
+- **WhatsApp booking number** is set in `src/config/business.ts`, or override it with `VITE_WHATSAPP_NUMBER` (see `.env.example`) in Vercel → Project Settings → Environment Variables.
+- Bookings open WhatsApp (`https://wa.me/<number>?text=...`) with a pre-filled message. The customer must still tap **Send** in WhatsApp — the form says this clearly.

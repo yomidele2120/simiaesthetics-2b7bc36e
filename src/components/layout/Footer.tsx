@@ -1,28 +1,30 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { Logo } from "./Header";
+import { BUSINESS } from "@/config/business";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 export const Footer = () => {
   return (
-    <footer className="bg-secondary/50 border-t border-border">
+    <footer className="bg-secondary/60 border-t border-border">
       <div className="container mx-auto px-4 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link to="/" className="inline-block mb-4">
-              <span className="font-heading text-2xl font-semibold text-foreground">
-                Simi <span className="text-primary">Aesthetic</span>
-              </span>
+            <Link to="/" className="inline-block mb-5" aria-label="Simi Aesthetic — home">
+              <Logo />
             </Link>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Enhancing your beauty with a soft & timeless touch. Premium lash extensions, brows, and tattoo services.
+            <p className="font-heading italic text-lg text-foreground/80">{BUSINESS.tagline}</p>
+            <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
+              Premium lash extensions, brows and tattoo services in Abule Egba, Lagos.
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-4 mt-6">
               <a
-                href="https://tiktok.com/@simi_aesthetic_"
+                href={BUSINESS.tiktok}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-all duration-300"
                 aria-label="TikTok"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -30,10 +32,10 @@ export const Footer = () => {
                 </svg>
               </a>
               <a
-                href="https://wa.me/2349152581489"
+                href={buildWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-all duration-300"
                 aria-label="WhatsApp"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -49,6 +51,9 @@ export const Footer = () => {
             <nav className="flex flex-col gap-3">
               <Link to="/lashes" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                 Lash Extensions
+              </Link>
+              <Link to="/cluster-lashes" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                Cluster Lashes
               </Link>
               <Link to="/brows" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                 Brows
@@ -85,7 +90,7 @@ export const Footer = () => {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  Abule Egba, Off Ekoro Road, Command Bus Stop, Lagos, Nigeria
+                  {BUSINESS.address}, Nigeria
                 </span>
               </div>
               <a href="tel:09152581489" className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors">
@@ -107,7 +112,7 @@ export const Footer = () => {
               © {new Date().getFullYear()} Simi Aesthetic. All rights reserved.
             </p>
             <p className="text-muted-foreground text-sm">
-              Enhancing beauty, one client at a time.
+              Enhancing Beauty, Boosting Confidence.
             </p>
           </div>
         </div>

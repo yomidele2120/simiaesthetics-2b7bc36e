@@ -1,181 +1,136 @@
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { format } from "date-fns";
+import { CalendarDays, Clock, User, MessageSquare, Sparkles, Check, Send, Info } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { Calendar, Clock, User, Phone, Mail, MessageSquare, Check } from "lucide-react";
+import { serviceGroups, findService, formatPrice, serviceLabel } from "@/data/services";
+import { buildBookingMessage, buildWhatsAppUrl, openWhatsApp } from "@/lib/whatsapp";
 
-const serviceCategories = {
-  lashes: {
-    name: "Lash Extensions",
-    services: [
-      { id: "normal-classic", name: "Normal Set — Classic", price: "₦13,000" },
-      { id: "normal-hybrid", name: "Normal Set — Hybrid", price: "₦17,000" },
-      { id: "normal-volume", name: "Normal Set — Volume", price: "₦23,000" },
-      { id: "normal-mega", name: "Normal Set — Mega Volume", price: "₦30,000" },
-      { id: "custom-classic", name: "Customized — Classic", price: "₦15,000" },
-      { id: "custom-hybrid", name: "Customized — Hybrid", price: "₦25,000" },
-      { id: "custom-volume", name: "Customized — Volume", price: "₦35,000" },
-      { id: "cluster-classic", name: "Cluster — Classic", price: "₦8,000" },
-      { id: "cluster-hybrid", name: "Cluster — Hybrid", price: "₦12,000" },
-      { id: "cluster-volume", name: "Cluster — Volume", price: "₦15,000" },
-      { id: "cluster-mega", name: "Cluster — Mega Volume", price: "₦20,000" },
-      { id: "extra-refill", name: "Extra — Refill", price: "₦5,000" },
-      { id: "extra-under-eyes", name: "Extra — Under Eyes", price: "₦5,000" },
-      { id: "extra-wispy", name: "Extra — Wispy", price: "₦5,000" },
-      { id: "extra-removal", name: "Extra — Removal", price: "₦5,000" },
-    ],
-  },
-  brows: {
-    name: "Brows",
-    services: [
-      { id: "ombre-brows", name: "Ombré Brows", price: "₦40,000" },
-      { id: "brow-tinting-lamination", name: "Brow Tinting & Lamination", price: "₦20,000" },
-    ],
-  },
-  tattoos: {
-    name: "Tattoos",
-    services: [
-      { id: "small-tattoo", name: "Small Tattoo", price: "₦15,000" },
-      { id: "big-tattoo", name: "Big Tattoo", price: "₦25,000" },
-    ],
-  },
+const timeSlots = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
+
+// Links from the previous version of the site used these ids.
+const legacyIds: Record<string, string> = {
+  "extra-under-eyes": "addon-under-eye",
+  "extra-wispy": "addon-wispy",
+  "extra-removal": "addon-removal",
 };
 
-const timeSlots = [
-  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"
-];
+type Errors = Partial<Record<"service" | "name" | "date" | "time", string>>;
+
+const todayISO = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+
+/** Parses "YYYY-MM-DD" as a local date (avoids timezone shifts). */
+const parseLocalDate = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
+};
+
+const WhatsAppIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+  </svg>
+);
+
+const SELECT_ARROW =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E\")";
+
+const fieldBase =
+  "w-full h-12 rounded-xl border bg-white px-4 text-base text-foreground placeholder:text-muted-foreground/70 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary";
 
 const Booking = () => {
   const [searchParams] = useSearchParams();
-  const { toast } = useToast();
-  const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  
-  const [formData, setFormData] = useState({
-    category: "",
-    service: "",
-    date: "",
-    time: "",
-    fullName: "",
-    phone: "",
-    email: "",
-    notes: "",
-  });
+  const [serviceId, setServiceId] = useState("");
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [notes, setNotes] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
+  const [sentUrl, setSentUrl] = useState<string | null>(null);
 
-  // Pre-fill from URL params
+  // Pre-select a service when arriving from a "Book" button
   useEffect(() => {
-    const category = searchParams.get("category");
-    const service = searchParams.get("service");
-    if (category) {
-      setFormData(prev => ({ ...prev, category }));
-      if (service) {
-        setFormData(prev => ({ ...prev, service }));
-        setStep(2);
-      }
-    }
+    const raw = searchParams.get("service");
+    const id = raw ? legacyIds[raw] ?? raw : "";
+    if (findService(id)) setServiceId(id);
   }, [searchParams]);
 
-  const selectedCategory = formData.category ? serviceCategories[formData.category as keyof typeof serviceCategories] : null;
-  const selectedService = selectedCategory?.services.find(s => s.id === formData.service);
+  const service = findService(serviceId);
+  const minDate = useMemo(todayISO, []);
 
-  const handleCategorySelect = (category: string) => {
-    setFormData(prev => ({ ...prev, category, service: "" }));
+  const message = useMemo(() => {
+    if (!service) return "";
+    return buildBookingMessage({
+      customerName: name || "—",
+      service: serviceLabel(service),
+      price: formatPrice(service),
+      date: date ? format(parseLocalDate(date), "EEEE, d MMMM yyyy") : "—",
+      time: time || "—",
+      notes,
+    });
+  }, [service, name, date, time, notes]);
+
+  const validate = (): Errors => {
+    const e: Errors = {};
+    if (!service) e.service = "Please choose a service.";
+    if (name.trim().length < 2) e.name = "Please enter your full name.";
+    if (!date) e.date = "Please choose a date.";
+    else if (date < minDate) e.date = "Please choose today or a future date.";
+    if (!time) e.time = "Please choose a time.";
+    return e;
   };
 
-  const handleServiceSelect = (serviceId: string) => {
-    setFormData(prev => ({ ...prev, service: serviceId }));
-    setStep(2);
-  };
-
-  const handleDateTimeNext = () => {
-    if (formData.date && formData.time) {
-      setStep(3);
+  const handleSubmit = (ev: FormEvent) => {
+    ev.preventDefault();
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length) {
+      const first = document.querySelector<HTMLElement>(`[data-field="${Object.keys(e)[0]}"]`);
+      first?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
     }
+    const url = buildWhatsAppUrl(message);
+    openWhatsApp(url); // called synchronously in the submit handler so mobile browsers allow it
+    setSentUrl(url);
+    window.scrollTo({ top: 0 });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Create mailto link with booking details
-    const subject = encodeURIComponent(`Booking Request - ${selectedService?.name}`);
-    const body = encodeURIComponent(`
-BOOKING REQUEST - SIMI AESTHETIC
-
-Service Category: ${selectedCategory?.name}
-Service: ${selectedService?.name} (${selectedService?.price})
-
-Preferred Date: ${formData.date}
-Preferred Time: ${formData.time}
-
-CLIENT DETAILS:
-Name: ${formData.fullName}
-Phone: ${formData.phone}
-Email: ${formData.email}
-
-Additional Notes:
-${formData.notes || "None"}
-
----
-This booking request was submitted through the Simi Aesthetic website.
-    `);
-
-    // Open email client
-    window.location.href = `mailto:Orunesajosimisola2020@gmail.com?subject=${subject}&body=${body}`;
-
-    // Show success after a brief delay
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      toast({
-        title: "Booking Request Sent!",
-        description: "Please complete payment via WhatsApp after confirmation.",
-      });
-    }, 1000);
+  const reset = () => {
+    setSentUrl(null);
+    setServiceId("");
+    setName("");
+    setDate("");
+    setTime("");
+    setNotes("");
+    setErrors({});
   };
 
-  if (isSubmitted) {
+  // ——— After submitting ———
+  if (sentUrl) {
     return (
       <Layout>
-        <section className="py-20 lg:py-32">
-          <div className="container mx-auto px-4 lg:px-8">
+        <section className="py-16 lg:py-28 bg-[#f6f6f6]">
+          <div className="container mx-auto px-5 lg:px-8">
             <div className="max-w-xl mx-auto text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <Check className="w-10 h-10 text-primary" />
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-foreground flex items-center justify-center">
+                <WhatsAppIcon className="w-10 h-10 text-background" />
               </div>
-              <h1 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">
-                Booking Request Sent!
-              </h1>
-              <p className="text-muted-foreground mb-8">
-                Thank you for your booking request. We'll confirm your appointment shortly 
-                via WhatsApp or phone. Payment will be completed through WhatsApp after confirmation.
+              <h1 className="font-heading text-3xl sm:text-4xl text-foreground">One last step — tap Send</h1>
+              <p className="mt-4 text-muted-foreground leading-relaxed">
+                WhatsApp has opened with your booking message ready. <strong className="text-foreground">Your booking is
+                not sent until you tap the Send button inside WhatsApp.</strong> We'll reply there to confirm your appointment.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="https://wa.me/2349152581489" target="_blank" rel="noopener noreferrer">
-                  <Button variant="whatsapp" size="lg">
-                    Message on WhatsApp
-                  </Button>
-                </a>
-                <Button variant="outline" size="lg" onClick={() => {
-                  setIsSubmitted(false);
-                  setStep(1);
-                  setFormData({
-                    category: "",
-                    service: "",
-                    date: "",
-                    time: "",
-                    fullName: "",
-                    phone: "",
-                    email: "",
-                    notes: "",
-                  });
-                }}>
-                  Book Another Service
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+                <Button asChild variant="whatsapp" size="lg">
+                  <a href={sentUrl} target="_blank" rel="noopener noreferrer">
+                    <WhatsAppIcon /> Open WhatsApp again
+                  </a>
+                </Button>
+                <Button variant="outline" size="lg" onClick={reset}>
+                  Book another service
                 </Button>
               </div>
             </div>
@@ -187,273 +142,203 @@ This booking request was submitted through the Simi Aesthetic website.
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="py-12 lg:py-16 bg-gradient-to-b from-secondary/50 to-background">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">
-              Book Your <span className="text-primary italic">Appointment</span>
-            </h1>
-            <p className="text-muted-foreground">
-              Select your desired service and preferred time. All booking payments will be 
-              completed through WhatsApp after confirmation.
-            </p>
-          </div>
+      {/* Header */}
+      <section className="pt-12 pb-10 lg:pt-16 lg:pb-14 bg-[#f6f6f6]">
+        <div className="container mx-auto px-5 lg:px-8 text-center max-w-2xl">
+          <span className="eyebrow">Book on WhatsApp</span>
+          <h1 className="mt-4 font-heading text-4xl sm:text-5xl font-medium text-foreground">
+            Book your <em className="text-primary">appointment</em>
+          </h1>
+          <p className="mt-4 text-muted-foreground">
+            Fill in the details below. Your booking request will open in WhatsApp, ready to send to Simi Aesthetic.
+          </p>
         </div>
       </section>
 
-      {/* Progress Steps */}
-      <section className="py-8 border-b border-border">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex items-center justify-center gap-4 md:gap-8">
-            {[
-              { num: 1, label: "Select Service" },
-              { num: 2, label: "Date & Time" },
-              { num: 3, label: "Your Details" },
-            ].map((s, idx) => (
-              <div key={s.num} className="flex items-center gap-2 md:gap-4">
-                <div className={`flex items-center gap-2 ${step >= s.num ? "text-primary" : "text-muted-foreground"}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                    step >= s.num ? "bg-primary text-primary-foreground" : "bg-secondary"
-                  }`}>
-                    {step > s.num ? <Check className="w-4 h-4" /> : s.num}
-                  </div>
-                  <span className="hidden md:block text-sm font-medium">{s.label}</span>
-                </div>
-                {idx < 2 && <div className={`w-8 md:w-16 h-0.5 ${step > s.num ? "bg-primary" : "bg-border"}`} />}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Booking Form */}
-      <section className="py-12 lg:py-20">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            
-            {/* Step 1: Select Service */}
-            {step === 1 && (
-              <div className="animate-fade-in">
-                <h2 className="font-heading text-2xl font-semibold text-foreground mb-6 text-center">
-                  Choose Your Service
-                </h2>
-
-                {/* Category Selection */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                  {Object.entries(serviceCategories).map(([key, cat]) => (
-                    <button
-                      key={key}
-                      onClick={() => handleCategorySelect(key)}
-                      className={`p-6 rounded-xl text-center transition-all duration-300 ${
-                        formData.category === key
-                          ? "bg-primary text-primary-foreground shadow-elegant"
-                          : "bg-secondary hover:bg-secondary/80 text-foreground"
-                      }`}
-                    >
-                      <span className="font-heading text-lg font-semibold">{cat.name}</span>
-                    </button>
+      <section className="pb-20 lg:pb-28">
+        <div className="container mx-auto px-5 lg:px-8">
+          <div className="grid lg:grid-cols-[1.4fr_1fr] gap-8 lg:gap-12 max-w-6xl mx-auto">
+            {/* Form */}
+            <form onSubmit={handleSubmit} noValidate className="rounded-3xl bg-white border border-border/70 shadow-soft p-6 sm:p-10 space-y-8">
+              {/* Service */}
+              <div data-field="service">
+                <label htmlFor="service" className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
+                  <Sparkles className="w-4 h-4 text-primary" /> Service <span className="text-primary">*</span>
+                </label>
+                <select
+                  id="service"
+                  value={serviceId}
+                  onChange={(e) => {
+                    setServiceId(e.target.value);
+                    setErrors((p) => ({ ...p, service: undefined }));
+                  }}
+                  aria-invalid={!!errors.service}
+                  style={{ backgroundImage: SELECT_ARROW }}
+                  className={`${fieldBase} appearance-none bg-no-repeat bg-[right_1rem_center] pr-10 ${
+                    errors.service ? "border-destructive" : "border-input"
+                  } ${serviceId ? "" : "text-muted-foreground"}`}
+                >
+                  <option value="">Select a service…</option>
+                  {serviceGroups.map((g) => (
+                    <optgroup key={g.id} label={g.title}>
+                      {g.services.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name} — {formatPrice(s)}
+                        </option>
+                      ))}
+                    </optgroup>
                   ))}
-                </div>
-
-                {/* Service Selection */}
-                {selectedCategory && (
-                  <div className="space-y-3">
-                    <p className="text-muted-foreground text-sm mb-4">Select a specific service:</p>
-                    {selectedCategory.services.map((service) => (
-                      <button
-                        key={service.id}
-                        onClick={() => handleServiceSelect(service.id)}
-                        className={`w-full p-4 rounded-xl text-left flex items-center justify-between transition-all duration-300 ${
-                          formData.service === service.id
-                            ? "bg-primary/10 border-2 border-primary"
-                            : "bg-card border border-border hover:border-primary/50"
-                        }`}
-                      >
-                        <span className="font-medium text-foreground">{service.name}</span>
-                        <span className="text-primary font-semibold">{service.price}</span>
-                      </button>
-                    ))}
+                </select>
+                {errors.service && <p className="mt-2 text-sm text-destructive">{errors.service}</p>}
+                {service && (
+                  <div className="mt-3 flex items-center justify-between rounded-xl bg-secondary px-4 py-3 text-sm">
+                    <span className="text-secondary-foreground">{serviceLabel(service)}</span>
+                    <span className="font-semibold text-primary">{formatPrice(service)}</span>
                   </div>
                 )}
+                {service?.category === "tattoos" && (
+                  <p className="mt-2 text-xs text-muted-foreground">Tattoo prices vary depending on the size and design.</p>
+                )}
               </div>
-            )}
 
-            {/* Step 2: Date & Time */}
-            {step === 2 && (
-              <div className="animate-fade-in">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="font-heading text-2xl font-semibold text-foreground">
-                    Select Date & Time
-                  </h2>
-                  <button onClick={() => setStep(1)} className="text-primary text-sm hover:underline">
-                    Change Service
-                  </button>
+              {/* Name */}
+              <div data-field="name">
+                <label htmlFor="name" className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
+                  <User className="w-4 h-4 text-primary" /> Full name <span className="text-primary">*</span>
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setErrors((p) => ({ ...p, name: undefined }));
+                  }}
+                  placeholder="Your full name"
+                  aria-invalid={!!errors.name}
+                  className={`${fieldBase} ${errors.name ? "border-destructive" : "border-input"}`}
+                />
+                {errors.name && <p className="mt-2 text-sm text-destructive">{errors.name}</p>}
+              </div>
+
+              {/* Date */}
+              <div data-field="date">
+                <label htmlFor="date" className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
+                  <CalendarDays className="w-4 h-4 text-primary" /> Preferred date <span className="text-primary">*</span>
+                </label>
+                <input
+                  id="date"
+                  type="date"
+                  min={minDate}
+                  value={date}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    setErrors((p) => ({ ...p, date: undefined }));
+                  }}
+                  aria-invalid={!!errors.date}
+                  className={`${fieldBase} ${errors.date ? "border-destructive" : "border-input"} [&::-webkit-date-and-time-value]:text-left`}
+                />
+                {errors.date && <p className="mt-2 text-sm text-destructive">{errors.date}</p>}
+              </div>
+
+              {/* Time */}
+              <div data-field="time">
+                <p className="flex items-center gap-2 text-sm font-semibold text-foreground mb-3" id="time-label">
+                  <Clock className="w-4 h-4 text-primary" /> Preferred time <span className="text-primary">*</span>
+                </p>
+                <div role="radiogroup" aria-labelledby="time-label" className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                  {timeSlots.map((slot) => {
+                    const active = time === slot;
+                    return (
+                      <button
+                        key={slot}
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        onClick={() => {
+                          setTime(slot);
+                          setErrors((p) => ({ ...p, time: undefined }));
+                        }}
+                        className={`h-11 rounded-xl text-sm font-medium border transition-all ${
+                          active
+                            ? "bg-primary text-primary-foreground border-primary shadow-elegant"
+                            : "bg-white text-foreground/80 border-input hover:border-primary/50"
+                        }`}
+                      >
+                        {slot}
+                      </button>
+                    );
+                  })}
                 </div>
+                {errors.time && <p className="mt-2 text-sm text-destructive">{errors.time}</p>}
+              </div>
 
-                {/* Selected Service Summary */}
-                <div className="bg-secondary/50 p-4 rounded-xl mb-8">
-                  <p className="text-sm text-muted-foreground">Selected Service:</p>
-                  <p className="font-heading text-lg font-semibold text-foreground">
-                    {selectedService?.name} <span className="text-primary">({selectedService?.price})</span>
-                  </p>
-                </div>
+              {/* Notes */}
+              <div>
+                <label htmlFor="notes" className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
+                  <MessageSquare className="w-4 h-4 text-primary" /> Additional notes{" "}
+                  <span className="font-normal text-muted-foreground">(optional)</span>
+                </label>
+                <textarea
+                  id="notes"
+                  rows={3}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="E.g. preferred lash style, tattoo idea or size, allergies…"
+                  className={`${fieldBase} h-auto py-3 border-input resize-none`}
+                />
+              </div>
 
-                <div className="space-y-6">
-                  {/* Date Input */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                      <Calendar className="w-4 h-4 text-primary" />
-                      Preferred Date
-                    </label>
-                    <Input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                      min={new Date().toISOString().split('T')[0]}
-                      className="bg-card"
-                    />
-                  </div>
+              {/* Important notice */}
+              <div className="flex items-start gap-3 rounded-2xl border border-border bg-secondary px-4 py-4 text-sm text-foreground/80">
+                <Info className="w-5 h-5 mt-0.5 shrink-0 text-foreground" />
+                <p>
+                  Tapping the button below opens WhatsApp with your booking message already written.{" "}
+                  <strong className="text-foreground">You still need to tap Send in WhatsApp</strong> for us to receive it.
+                </p>
+              </div>
 
-                  {/* Time Selection */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                      <Clock className="w-4 h-4 text-primary" />
-                      Preferred Time
-                    </label>
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
-                      {timeSlots.map((time) => (
-                        <button
-                          key={time}
-                          onClick={() => setFormData(prev => ({ ...prev, time }))}
-                          className={`py-2 px-3 rounded-lg text-sm font-medium transition-all ${
-                            formData.time === time
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-secondary text-foreground hover:bg-secondary/80"
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      ))}
+              <Button type="submit" variant="whatsapp" size="xl" className="w-full">
+                <WhatsAppIcon /> Continue to WhatsApp
+              </Button>
+            </form>
+
+            {/* Live summary */}
+            <aside className="lg:sticky lg:top-28 h-fit space-y-4">
+              <div className="rounded-3xl bg-[#0b0b0b] text-white p-6 sm:p-8">
+                <p className="text-xs uppercase tracking-[0.25em] text-white/60">Your booking</p>
+                <dl className="mt-5 space-y-4 text-sm">
+                  {[
+                    ["Service", service ? serviceLabel(service) : "—"],
+                    ["Price", service ? formatPrice(service) : "—"],
+                    ["Date", date ? format(parseLocalDate(date), "EEE, d MMM yyyy") : "—"],
+                    ["Time", time || "—"],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex justify-between gap-4 border-b border-white/10 pb-3 last:border-0">
+                      <dt className="text-white/60">{k}</dt>
+                      <dd className="text-right font-medium">{v}</dd>
                     </div>
-                  </div>
-
-                  <Button 
-                    variant="blush" 
-                    size="lg" 
-                    className="w-full mt-6"
-                    onClick={handleDateTimeNext}
-                    disabled={!formData.date || !formData.time}
-                  >
-                    Continue
-                  </Button>
-                </div>
+                  ))}
+                </dl>
               </div>
-            )}
 
-            {/* Step 3: Contact Details */}
-            {step === 3 && (
-              <div className="animate-fade-in">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="font-heading text-2xl font-semibold text-foreground">
-                    Your Details
-                  </h2>
-                  <button onClick={() => setStep(2)} className="text-primary text-sm hover:underline">
-                    Change Time
-                  </button>
-                </div>
-
-                {/* Booking Summary */}
-                <div className="bg-secondary/50 p-4 rounded-xl mb-8">
-                  <p className="text-sm text-muted-foreground mb-2">Booking Summary:</p>
-                  <p className="font-heading font-semibold text-foreground">
-                    {selectedService?.name} <span className="text-primary">({selectedService?.price})</span>
+              {message && (
+                <div className="rounded-3xl border border-border/70 bg-secondary p-5">
+                  <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                    <Send className="w-3.5 h-3.5" /> Message preview
                   </p>
-                  <p className="text-muted-foreground text-sm mt-1">
-                    {formData.date} at {formData.time}
-                  </p>
+                  <div className="rounded-2xl rounded-tr-sm bg-white border border-border px-4 py-3 text-[0.8rem] leading-relaxed text-foreground whitespace-pre-line shadow-sm">
+                    {message}
+                  </div>
                 </div>
+              )}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                      <User className="w-4 h-4 text-primary" />
-                      Full Name
-                    </label>
-                    <Input
-                      type="text"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                      placeholder="Enter your full name"
-                      required
-                      className="bg-card"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                      <Phone className="w-4 h-4 text-primary" />
-                      Phone Number
-                    </label>
-                    <Input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      placeholder="Enter your phone number"
-                      required
-                      className="bg-card"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                      <Mail className="w-4 h-4 text-primary" />
-                      Email Address
-                    </label>
-                    <Input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="Enter your email address"
-                      required
-                      className="bg-card"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                      <MessageSquare className="w-4 h-4 text-primary" />
-                      Additional Notes (Optional)
-                    </label>
-                    <Textarea
-                      value={formData.notes}
-                      onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                      placeholder="Any special requests or notes..."
-                      rows={3}
-                      className="bg-card"
-                    />
-                  </div>
-
-                  {/* Payment Notice */}
-                  <div className="bg-accent/10 border border-accent/20 p-4 rounded-xl">
-                    <p className="text-sm text-foreground">
-                      <strong>Payment Notice:</strong> All booking payments will be completed 
-                      through WhatsApp after your appointment is confirmed. No card payment required.
-                    </p>
-                  </div>
-
-                  <Button 
-                    type="submit"
-                    variant="booking" 
-                    size="lg" 
-                    className="w-full"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Submitting..." : "Submit Booking Request"}
-                  </Button>
-                </form>
-              </div>
-            )}
+              <ul className="space-y-2 text-sm text-muted-foreground px-1">
+                <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> We'll confirm your slot on WhatsApp.</li>
+                <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Works on Android, iPhone and desktop (WhatsApp Web).</li>
+              </ul>
+            </aside>
           </div>
         </div>
       </section>

@@ -5,29 +5,29 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium font-body ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold tracking-wide font-body ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-elegant",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-primary/30 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary",
+        outline: "border border-foreground/25 bg-transparent text-foreground hover:border-foreground hover:bg-foreground/5",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-primary/10 hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         // Premium variants for Simi Aesthetic
         blush: "bg-primary text-primary-foreground hover:bg-primary/85 shadow-sm hover:shadow-elegant transition-all duration-300",
         gold: "bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm hover:shadow-gold transition-all duration-300",
-        hero: "bg-primary text-primary-foreground px-8 py-4 text-base font-semibold hover:bg-primary/85 shadow-elegant hover:shadow-lg hover:scale-[1.02] transition-all duration-300",
-        "hero-outline": "border-2 border-primary bg-transparent text-foreground px-8 py-4 text-base font-semibold hover:bg-primary/10 transition-all duration-300",
-        whatsapp: "bg-[#25D366] text-white hover:bg-[#20bd5a] shadow-md hover:shadow-lg transition-all duration-300",
-        booking: "bg-gradient-to-r from-primary to-blush text-primary-foreground font-semibold shadow-elegant hover:shadow-lg hover:scale-[1.02] transition-all duration-300",
+        hero: "bg-primary text-primary-foreground font-semibold hover:bg-primary/90 shadow-elegant hover:-translate-y-0.5 transition-all duration-300",
+        "hero-outline": "border border-foreground bg-transparent text-foreground font-semibold hover:bg-foreground hover:text-background transition-all duration-300",
+        whatsapp: "bg-foreground text-background hover:bg-foreground/85 shadow-md hover:shadow-lg transition-all duration-300",
+        booking: "bg-primary text-primary-foreground font-semibold shadow-elegant hover:shadow-lg hover:scale-[1.02] transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-12 rounded-lg px-8 text-base",
-        xl: "h-14 rounded-lg px-10 text-lg",
+        sm: "h-9 px-4",
+        lg: "h-12 px-8 text-[0.95rem]",
+        xl: "h-14 px-9 text-base",
         icon: "h-10 w-10",
       },
     },

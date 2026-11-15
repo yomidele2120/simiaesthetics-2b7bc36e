@@ -1,92 +1,66 @@
 import { Layout } from "@/components/Layout";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
-// Lash images
-import lashClassic from "@/assets/lash-classic.jpg";
-import lashHybrid from "@/assets/lash-hybrid.jpg";
-import lashVolume from "@/assets/lash-volume.jpg";
-import lashMega from "@/assets/lash-mega.jpg";
-import lashWispy from "@/assets/lash-wispy.jpg";
-import lashCustomized from "@/assets/lash-customized.jpg";
-import lashCluster from "@/assets/lash-cluster.jpg";
-// Tattoo images
-import tattooSmall from "@/assets/tattoo-small-1.jpg";
-import tattooBodyArt from "@/assets/tattoo-body-art-1.jpg";
-import tattooScript from "@/assets/tattoo-script-1.jpg";
-import tattooName from "@/assets/tattoo-name-1.jpg";
-import tattooTribal from "@/assets/tattoo-tribal-1.jpg";
-import tattooThigh from "@/assets/tattoo-thigh-1.jpg";
-import tattooNeck from "@/assets/tattoo-neck.jpg";
-import tattooBodyNew from "@/assets/tattoo-body.jpg";
-import tattooThighNew from "@/assets/tattoo-thigh-new.jpg";
+import { Button } from "@/components/ui/button";
+import { galleryItems, type GalleryItem } from "@/data/gallery";
 
-const lashVid1 = { url: "/__l5e/assets-v1/d4d08593-4acc-4eba-bb94-a57d11e6d77f/lash-video-1.mp4" };
-const lashVid2 = { url: "/__l5e/assets-v1/cd21c5f5-20dd-468e-95ad-4072e34b5383/lash-video-2.mp4" };
-const lashVid3 = { url: "/__l5e/assets-v1/289fad0f-21c5-4421-a5ce-2d304977640f/lash-video-3.mp4" };
-const galVid1 = { url: "/__l5e/assets-v1/60e3b22e-449c-4a20-a10e-3006a4a772d8/gallery-video-1.mp4" };
-const galVid2 = { url: "/__l5e/assets-v1/c560ed5c-efe8-4583-8a01-cc54bd69be2b/gallery-video-2.mp4" };
-const galVid3 = { url: "/__l5e/assets-v1/cf615daa-2838-41b3-a56f-73d74ac83d31/gallery-video-3.mp4" };
-const galVid4 = { url: "/__l5e/assets-v1/ef39da3c-018b-4913-90e7-be3eb8ec2e93/gallery-video-4.mp4" };
-const galVid5 = { url: "/__l5e/assets-v1/75601d4f-098c-420a-984d-c339d6300e49/gallery-video-5.mp4" };
+const filters = ["All", "Lashes", "Brows", "Tattoos", "Videos"] as const;
+type Filter = (typeof filters)[number];
 
-const categories = ["All", "Lashes/Brows", "Tattoos"];
+const matches = (item: GalleryItem, f: Filter) =>
+  f === "All" ? true : f === "Videos" ? item.type === "video" : item.category === f;
 
-interface GalleryItem {
-  image?: string;
-  video?: string;
-  category: string;
-  title: string;
-  type: "image" | "video";
-}
-
-const galleryItems: GalleryItem[] = [
-  // Lash/Brows work
-  { image: lashClassic, category: "Lashes/Brows", title: "Classic Lashes", type: "image" },
-  { image: lashHybrid, category: "Lashes/Brows", title: "Full Glam Hybrid", type: "image" },
-  { image: lashVolume, category: "Lashes/Brows", title: "Volume Close-Up", type: "image" },
-  { image: lashMega, category: "Lashes/Brows", title: "Mega Volume Set", type: "image" },
-  { image: lashWispy, category: "Lashes/Brows", title: "Wispy Lashes", type: "image" },
-  { image: lashCustomized, category: "Lashes/Brows", title: "Customized Set", type: "image" },
-  { image: lashCluster, category: "Lashes/Brows", title: "Cluster Lashes", type: "image" },
-  // Lash videos
-  { video: lashVid1.url, category: "Lashes/Brows", title: "Lash Application", type: "video" },
-  { video: lashVid2.url, category: "Lashes/Brows", title: "Lash Reveal", type: "video" },
-  { video: lashVid3.url, category: "Lashes/Brows", title: "Lash Styling", type: "video" },
-  // Tattoo work - images
-  { image: tattooNeck, category: "Tattoos", title: "'Beautiful Mind' Neck", type: "image" },
-  { image: tattooBodyNew, category: "Tattoos", title: "Script Side Tattoo", type: "image" },
-  { image: tattooThighNew, category: "Tattoos", title: "Thigh Script", type: "image" },
-  { image: tattooSmall, category: "Tattoos", title: "'With Love' Script", type: "image" },
-  { image: tattooBodyArt, category: "Tattoos", title: "'Body of Art' Back Tattoo", type: "image" },
-  { image: tattooScript, category: "Tattoos", title: "Script Lettering Tattoo", type: "image" },
-  { image: tattooName, category: "Tattoos", title: "Custom Name Tattoo", type: "image" },
-  { image: tattooTribal, category: "Tattoos", title: "Tribal Back Design", type: "image" },
-  { image: tattooThigh, category: "Tattoos", title: "'With Love, Always' Thigh", type: "image" },
-  // Tattoo videos
-  { video: galVid1.url, category: "Tattoos", title: "Tattoo Session", type: "video" },
-  { video: galVid2.url, category: "Tattoos", title: "Tattoo Application", type: "video" },
-  { video: galVid3.url, category: "Tattoos", title: "Studio Moments", type: "video" },
-  { video: galVid4.url, category: "Tattoos", title: "Tattoo Transformation", type: "video" },
-  { video: galVid5.url, category: "Tattoos", title: "Behind The Scenes", type: "video" },
-];
+/** Video tile that only plays while on screen (saves data on mobile). */
+const VideoTile = ({ item, onError }: { item: GalleryItem; onError: () => void }) => {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) v.play().catch(() => undefined);
+        else v.pause();
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <video
+      ref={ref}
+      src={item.src}
+      poster={item.poster}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      onError={onError}
+      width={item.width}
+      height={item.height}
+      style={{ aspectRatio: `${item.width} / ${item.height}` }}
+      className="block w-full h-auto object-cover bg-secondary transition-transform duration-700 group-hover:scale-[1.04]"
+    />
+  );
+};
 
 const Gallery = () => {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [active, setActive] = useState<Filter>("All");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const filteredItems = activeCategory === "All" 
-    ? galleryItems 
-    : galleryItems.filter(item => item.category === activeCategory);
+  // Hide any video that fails to load (e.g. files only hosted on the old platform)
+  const [broken, setBroken] = useState<Set<string>>(new Set());
+  const markBroken = (src: string) => setBroken((prev) => new Set(prev).add(src));
+
+  const filteredItems = galleryItems.filter((i) => !broken.has(i.src) && matches(i, active));
 
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
     setLightboxOpen(true);
   };
-
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-  };
+  const closeLightbox = () => setLightboxOpen(false);
 
   const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? filteredItems.length - 1 : prev - 1));
@@ -108,15 +82,14 @@ const Gallery = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [lightboxOpen, goToPrevious, goToNext]);
 
+  // Swipe navigation for phones
+  const touchX = useRef<number | null>(null);
+
   // Prevent body scroll when lightbox is open
   useEffect(() => {
-    if (lightboxOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = lightboxOpen ? "hidden" : "";
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [lightboxOpen]);
 
@@ -125,161 +98,163 @@ const Gallery = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-16 lg:py-24 bg-gradient-to-b from-secondary/50 to-background">
-        <div className="container mx-auto px-4 lg:px-8">
+      <section className="py-14 lg:py-20 bg-[#f6f6f6]">
+        <div className="container mx-auto px-5 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block text-primary font-medium text-sm tracking-wider uppercase mb-3">
-              Our Portfolio
-            </span>
-            <h1 className="font-heading text-4xl md:text-5xl font-semibold text-foreground mb-6">
-              Our Work — <span className="text-primary italic">Real Beauty Transformations</span>
+            <span className="eyebrow">Our Portfolio</span>
+            <h1 className="mt-4 font-heading text-4xl sm:text-5xl lg:text-6xl font-medium text-foreground">
+              Real beauty, <em className="text-primary">real results</em>
             </h1>
-            <p className="text-muted-foreground text-lg">
-              Browse through our portfolio of beautiful lash extensions, tattoo 
-              work, and videos. See the artistry and attention to detail in every transformation.
+            <p className="mt-5 text-muted-foreground text-base sm:text-lg">
+              Lash extensions, brows and tattoos from our studio in Abule Egba — tap any photo to view it full size.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Filter Tabs */}
-      <section className="py-8 border-b border-border">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => (
+      {/* Filters */}
+      <section className="sticky top-16 lg:top-20 z-30 bg-background/90 backdrop-blur-md border-b border-border/60">
+        <div className="container mx-auto px-5 lg:px-8">
+          <div className="scrollbar-hide -mx-5 px-5 flex gap-2 overflow-x-auto py-4 sm:justify-center">
+            {filters.map((f) => (
               <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                  activeCategory === category
-                    ? "bg-primary text-primary-foreground shadow-elegant"
-                    : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                key={f}
+                onClick={() => setActive(f)}
+                aria-pressed={active === f}
+                className={`shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  active === f
+                    ? "bg-foreground text-background"
+                    : "bg-white border border-border text-foreground/70 hover:text-primary hover:border-primary/40"
                 }`}
               >
-                {category}
+                {f}
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Gallery Grid */}
-      <section className="py-16 lg:py-24">
+      {/* Masonry grid — keeps every photo's true aspect ratio */}
+      <section className="py-10 lg:py-16">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-5">
+          <div key={active} className="columns-2 md:columns-3 xl:columns-4 gap-3 md:gap-5 animate-fade-in">
             {filteredItems.map((item, index) => (
-              <div
-                key={index}
+              <button
+                key={item.src}
+                type="button"
                 onClick={() => openLightbox(index)}
-                className="group relative aspect-[4/5] overflow-hidden rounded-xl cursor-pointer"
+                className="group relative mb-3 md:mb-5 block w-full break-inside-avoid overflow-hidden rounded-2xl bg-secondary text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                aria-label={`Open ${item.title}`}
               >
                 {item.type === "video" ? (
                   <>
-                    <video
-                      src={item.video}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      muted
-                      loop
-                      playsInline
-                      autoPlay
-                    />
-                    <div className="absolute top-4 right-4 w-10 h-10 bg-primary/80 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Play className="w-5 h-5 text-primary-foreground fill-current" />
-                    </div>
+                    <VideoTile item={item} onError={() => markBroken(item.src)} />
+                    <span className="absolute top-3 right-3 w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-soft">
+                      <Play className="w-4 h-4 text-primary fill-current ml-0.5" />
+                    </span>
                   </>
                 ) : (
                   <img
-                    src={item.image}
+                    src={item.src}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    width={item.width}
+                    height={item.height}
+                    loading={index < 4 ? "eager" : "lazy"}
+                    decoding="async"
+                    className="block w-full h-auto transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                  <span className="text-primary text-xs font-medium uppercase tracking-wider">
-                    {item.category}
-                  </span>
-                  <h3 className="text-white font-heading text-lg font-medium mt-1">
-                    {item.title}
-                  </h3>
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3 md:p-4 bg-gradient-to-t from-black/65 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <span className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/75">{item.category}</span>
+                  <p className="text-white font-heading text-base md:text-lg leading-tight">{item.title}</p>
                 </div>
-              </div>
+              </button>
             ))}
+          </div>
+
+          <div className="mt-14 text-center">
+            <p className="font-heading text-2xl sm:text-3xl text-foreground">Love what you see?</p>
+            <Button asChild variant="hero" size="xl" className="mt-6">
+              <Link to="/booking">Book Your Appointment</Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Lightbox */}
       {lightboxOpen && currentItem && (
-        <div 
+        <div
           className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center animate-fade-in"
           onClick={closeLightbox}
+          onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            if (touchX.current === null) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            if (Math.abs(dx) > 50) (dx > 0 ? goToPrevious : goToNext)();
+            touchX.current = null;
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={currentItem.title}
         >
-          {/* Close Button */}
           <button
             onClick={closeLightbox}
-            className="absolute top-4 right-4 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-            aria-label="Close lightbox"
+            className="absolute top-4 right-4 z-10 w-11 h-11 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+            aria-label="Close"
           >
             <X className="w-6 h-6 text-white" />
           </button>
-
-          {/* Previous Button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               goToPrevious();
             }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
             aria-label="Previous"
           >
             <ChevronLeft className="w-6 h-6 text-white" />
           </button>
-
-          {/* Next Button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               goToNext();
             }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
             aria-label="Next"
           >
             <ChevronRight className="w-6 h-6 text-white" />
           </button>
 
-          {/* Content */}
-          <div 
-            className="max-w-5xl max-h-[85vh] w-full mx-4"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <figure className="flex flex-col items-center max-w-5xl w-full px-14" onClick={(e) => e.stopPropagation()}>
             {currentItem.type === "video" ? (
               <video
-                src={currentItem.video}
-                className="w-full h-full max-h-[85vh] object-contain rounded-lg"
+                key={currentItem.src}
+                src={currentItem.src}
+                poster={currentItem.poster}
+                className="max-h-[78vh] w-auto max-w-full object-contain rounded-xl"
                 controls
                 autoPlay
                 loop
+                playsInline
               />
             ) : (
               <img
-                src={currentItem.image}
+                key={currentItem.src}
+                src={currentItem.src}
                 alt={currentItem.title}
-                className="w-full h-full max-h-[85vh] object-contain rounded-lg"
+                className="max-h-[78vh] w-auto max-w-full object-contain rounded-xl animate-fade-in"
               />
             )}
-            <div className="text-center mt-4">
-              <span className="text-primary text-sm font-medium uppercase tracking-wider">
+            <figcaption className="text-center mt-4">
+              <span className="text-white/60 text-xs font-semibold uppercase tracking-[0.2em]">
                 {currentItem.category}
               </span>
-              <h3 className="text-white font-heading text-xl font-medium mt-1">
-                {currentItem.title}
-              </h3>
-              <p className="text-white/60 text-sm mt-2">
+              <p className="text-white font-heading text-xl mt-1">{currentItem.title}</p>
+              <p className="text-white/50 text-sm mt-1">
                 {currentIndex + 1} / {filteredItems.length}
               </p>
-            </div>
-          </div>
+            </figcaption>
+          </figure>
         </div>
       )}
     </Layout>

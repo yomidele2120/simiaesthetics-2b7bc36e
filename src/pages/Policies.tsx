@@ -1,6 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 const Policies = () => {
   return (
@@ -122,7 +123,7 @@ const Policies = () => {
                     Contact Us
                   </Button>
                 </Link>
-                <a href="https://wa.me/2349152581489" target="_blank" rel="noopener noreferrer">
+                <a href={buildWhatsAppUrl()} target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" size="lg">
                     WhatsApp Us
                   </Button>

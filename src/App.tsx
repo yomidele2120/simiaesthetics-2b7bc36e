@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Lashes from "./pages/Lashes";
+import ClusterLashes from "./pages/ClusterLashes";
 import Brows from "./pages/Brows";
 import Tattoos from "./pages/Tattoos";
 import Gallery from "./pages/Gallery";
@@ -26,6 +27,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/lashes" element={<Lashes />} />
+          <Route path="/cluster-lashes" element={<ClusterLashes />} />
           <Route path="/brows" element={<Brows />} />
           <Route path="/tattoos" element={<Tattoos />} />
           <Route path="/gallery" element={<Gallery />} />

@@ -1,5 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -92,7 +93,7 @@ const Contact = () => {
                     </Button>
                   </Link>
                   <a
-                    href="https://wa.me/2349152581489"
+                    href={buildWhatsAppUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block"
