@@ -75,8 +75,8 @@ const Index = () => {
           <div className="grid lg:grid-cols-[1.05fr_1fr] items-center gap-10 lg:gap-16 pt-8 pb-16 lg:py-20">
             {/* Copy */}
             <div className="order-2 lg:order-1 text-center lg:text-left">
-              <span className="eyebrow justify-center lg:justify-start animate-fade-in">Lashes · Brows · Tattoos</span>
-              <h1 className="mt-5 font-heading text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-7xl font-medium text-foreground animate-slide-up">
+              <span className="eyebrow mt-2 sm:mt-0 justify-center lg:justify-start animate-fade-in">Lashes · Brows · Tattoos</span>
+              <h1 className="mt-5 font-heading text-[2.3rem] leading-[1.08] sm:text-6xl lg:text-7xl font-medium text-foreground animate-slide-up">
                 Beauty is our <em className="text-primary">Art</em>,
                 <br className="hidden sm:block" /> Perfection is our{" "}
                 <em className="text-primary">Promise</em>.
@@ -111,7 +111,7 @@ const Index = () => {
             </div>
 
             {/* Imagery */}
-            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[15.5rem] sm:max-w-sm lg:max-w-[28rem] xl:max-w-[30rem] lg:mr-0">
+            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[12.5rem] sm:max-w-xs md:max-w-sm lg:max-w-[28rem] xl:max-w-[30rem] lg:mr-0">
               <div className="relative">
                 {/* gold offset arch */}
                 <div aria-hidden className="absolute inset-0 translate-x-3 translate-y-3 sm:translate-x-5 sm:translate-y-5 rounded-t-full rounded-b-[2rem] border border-accent/70" />
@@ -127,13 +127,13 @@ const Index = () => {
               </div>
 
               {/* floating location card */}
-              <div className="absolute -bottom-6 -left-6 sm:-left-12 flex items-center gap-3 rounded-2xl bg-white/95 backdrop-blur py-3 pl-3 pr-5 shadow-soft border border-border/60 animate-slide-up" style={{ animationDelay: "0.35s" }}>
-                <span className="w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center">
+              <div className="absolute -bottom-5 -left-10 sm:-left-12 flex items-center gap-2.5 sm:gap-3 rounded-2xl bg-white/95 backdrop-blur py-2 pl-2 pr-4 sm:py-3 sm:pl-3 sm:pr-5 shadow-soft border border-border/60 animate-slide-up" style={{ animationDelay: "0.35s" }}>
+                <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-foreground text-background flex items-center justify-center">
                   <MapPin className="w-4 h-4" />
                 </span>
                 <div className="leading-tight">
-                  <p className="font-heading text-base text-foreground">Visit our studio</p>
-                  <p className="text-xs text-muted-foreground">Command Bus Stop, Abule Egba</p>
+                  <p className="font-heading text-sm sm:text-base text-foreground">Visit our studio</p>
+                  <p className="text-[0.65rem] sm:text-xs text-muted-foreground whitespace-nowrap">Command Bus Stop, Abule Egba</p>
                 </div>
               </div>
             </div>
@@ -149,12 +149,12 @@ const Index = () => {
             <h2 className="section-title mt-4">Tailored treatments, beautifully done</h2>
           </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
             {categories.map((c, i) => (
               <Reveal key={c.title} delay={i * 100}>
                 <Link
                   to={c.link}
-                  className="group relative block overflow-hidden rounded-3xl aspect-[4/5] sm:aspect-[3/4] bg-secondary shadow-soft"
+                  className="group relative block overflow-hidden rounded-2xl sm:rounded-3xl aspect-[3/4] bg-secondary shadow-soft"
                 >
                   <img
                     src={c.image}
@@ -165,13 +165,14 @@ const Index = () => {
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 text-white">
-                    <p className="text-xs uppercase tracking-[0.25em] text-white/75">From {formatNaira(c.price)}</p>
-                    <h3 className="mt-2 font-heading text-3xl lg:text-[1.7rem] xl:text-3xl">{c.title}</h3>
-                    <p className="mt-2 text-sm text-white/80 max-w-xs">{c.blurb}</p>
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
-                      Explore {c.title.toLowerCase()}
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-7 text-white">
+                    <p className="text-[0.6rem] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.25em] text-white/75">From {formatNaira(c.price)}</p>
+                    <h3 className="mt-1 sm:mt-2 font-heading text-lg leading-tight sm:text-3xl lg:text-[1.7rem] xl:text-3xl">{c.title}</h3>
+                    <p className="hidden sm:block mt-2 text-sm text-white/80 max-w-xs">{c.blurb}</p>
+                    <span className="mt-2 sm:mt-5 inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold">
+                      <span className="sm:hidden">Explore</span>
+                      <span className="hidden sm:inline">Explore {c.title.toLowerCase()}</span>
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
                     </span>
                   </div>
                 </Link>
@@ -216,7 +217,7 @@ const Index = () => {
 
           <div className="columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-5 [&>*]:mb-3 sm:[&>*]:mb-5">
             {previewItems.map((item, i) => (
-              <Reveal key={item.src} delay={(i % 4) * 80} className="break-inside-avoid">
+              <Reveal key={item.src} delay={(i % 4) * 80} className={`break-inside-avoid ${i >= 6 ? "hidden md:block" : ""}`}>
                 <Link to="/gallery" className="group relative block overflow-hidden rounded-2xl bg-secondary">
                   <img
                     src={item.src}

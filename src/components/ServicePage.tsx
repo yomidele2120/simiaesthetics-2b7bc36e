@@ -63,16 +63,16 @@ export const ServicePage = ({ category, eyebrow, title, intro, heroImage, heroFo
 
       {/* Services */}
       <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-5 lg:px-8 space-y-20">
+        <div className="container mx-auto px-5 lg:px-8 space-y-14 sm:space-y-20">
           {groups.map((group) => (
             <div key={group.id} id={group.id} className="scroll-mt-24">
-              <Reveal className="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 text-center lg:text-left">
+              <Reveal className="mb-6 sm:mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 text-center lg:text-left">
                 <div>
                   <h2 className="section-title">{group.title}</h2>
                   <p className="text-muted-foreground mt-3">{group.subtitle}</p>
                 </div>
                 {/* compact price summary */}
-                <ul className="flex flex-wrap justify-center lg:justify-end gap-2">
+                <ul className="hidden sm:flex flex-wrap justify-center lg:justify-end gap-2">
                   {group.services.map((s) => (
                     <li key={s.id} className="rounded-full bg-secondary px-3.5 py-1.5 text-xs font-medium text-secondary-foreground">
                       {s.name} · <span className="text-primary font-semibold">{formatPrice(s)}</span>
@@ -86,7 +86,7 @@ export const ServicePage = ({ category, eyebrow, title, intro, heroImage, heroFo
                 <div className="grid md:grid-cols-[0.85fr_1.15fr] gap-8 lg:gap-12 items-center">
                   {group.image && (
                     <Reveal>
-                      <div className="relative mx-auto max-w-sm w-full aspect-[4/5] overflow-hidden rounded-3xl bg-secondary shadow-soft">
+                      <div className="relative mx-auto w-full max-w-[13rem] sm:max-w-xs md:max-w-sm aspect-[4/5] overflow-hidden rounded-2xl sm:rounded-3xl bg-secondary shadow-soft">
                         <img src={group.image} alt={`${group.title} by Simi Aesthetic`} loading="lazy" decoding="async" className="h-full w-full object-cover object-[50%_35%]" />
                       </div>
                     </Reveal>
@@ -94,10 +94,10 @@ export const ServicePage = ({ category, eyebrow, title, intro, heroImage, heroFo
                   <Reveal delay={100}>
                     <ul className="rounded-3xl bg-white border border-border/70 shadow-soft divide-y divide-border/60">
                       {group.services.map((s) => (
-                        <li key={s.id} className="p-6 sm:p-7 flex items-center justify-between gap-5">
+                        <li key={s.id} className="p-4 sm:p-7 flex items-center justify-between gap-4 sm:gap-5">
                           <div>
                             <div className="flex items-baseline gap-3">
-                              <h3 className="font-heading text-xl sm:text-2xl text-foreground">{s.name}</h3>
+                              <h3 className="font-heading text-lg sm:text-2xl text-foreground">{s.name}</h3>
                               <span className="font-semibold text-foreground">{formatPrice(s)}</span>
                             </div>
                             <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{s.description}</p>
@@ -114,7 +114,7 @@ export const ServicePage = ({ category, eyebrow, title, intro, heroImage, heroFo
                 </div>
               ) : (
                 <div
-                  className={`grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 ${
+                  className={`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 lg:gap-8 ${
                     group.services.length >= 4 ? "lg:grid-cols-4" : group.services.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-2 lg:max-w-4xl lg:mx-auto"
                   }`}
                 >

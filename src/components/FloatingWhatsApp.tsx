@@ -15,8 +15,6 @@ export const FloatingWhatsApp = () => {
       aria-label="Chat on WhatsApp"
     >
       <div className="relative">
-        {/* Pulse Animation */}
-        <div className="absolute inset-0 bg-foreground rounded-full animate-ping opacity-10 [animation-duration:2.5s]" />
         
         {/* Button */}
         <div className="relative flex items-center gap-3 bg-foreground text-background px-4 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">

@@ -16,7 +16,13 @@ export const Reveal = ({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (typeof IntersectionObserver === "undefined" || reduceMotion) {
+      setVisible(true);
+      return;
+    }
+    // Already on screen when the page loads → show immediately
+    if (el.getBoundingClientRect().top < window.innerHeight) {
       setVisible(true);
       return;
     }
@@ -27,7 +33,9 @@ export const Reveal = ({
           io.disconnect();
         }
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+      // Start revealing slightly BEFORE the element scrolls into view, so content
+      // is never left blank on screen (important on phones).
+      { rootMargin: "0px 0px 20% 0px", threshold: 0 },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -37,8 +45,8 @@ export const Reveal = ({
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-out ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+      className={`transition-[opacity,transform] duration-500 ease-out ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
       } ${className}`}
     >
       {children}
