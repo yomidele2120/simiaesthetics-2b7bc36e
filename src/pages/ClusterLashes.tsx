@@ -1,5 +1,5 @@
 import { ServicePage } from "@/components/ServicePage";
-import heroImage from "@/assets/work/lash-wispy-glam.jpg";
+import heroImage from "@/assets/work/studio-floral.jpg";
 
 const ClusterLashes = () => (
   <ServicePage

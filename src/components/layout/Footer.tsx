@@ -64,6 +64,9 @@ export const Footer = () => {
               <Link to="/gallery" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                 Gallery
               </Link>
+              <Link to="/reviews" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                Reviews
+              </Link>
             </nav>
           </div>
 

@@ -7,6 +7,8 @@ export interface BookingDetails {
   date: string;
   time: string;
   notes?: string;
+  /** Set when the customer paid by bank transfer. */
+  amountPaid?: string;
 }
 
 /** Builds the WhatsApp Click-to-Chat URL for a business number + message. */
@@ -26,6 +28,9 @@ export const buildBookingMessage = (b: BookingDetails) =>
     `Preferred Date: ${b.date}`,
     `Preferred Time: ${b.time}`,
     `Additional Notes: ${b.notes?.trim() ? b.notes.trim() : "None"}`,
+    ...(b.amountPaid
+      ? ["", `Amount Paid: ${b.amountPaid} (bank transfer)`, "Payment Receipt: I'm sending my receipt in the next message."]
+      : []),
     "",
     "Please confirm my appointment. Thank you.",
   ].join("\n");

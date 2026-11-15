@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Info } from "lucide-react";
+import { Info, ArrowUpRight } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Reveal } from "@/components/Reveal";
@@ -81,24 +81,57 @@ export const ServicePage = ({ category, eyebrow, title, intro, heroImage, heroFo
                 </ul>
               </Reveal>
 
-              <div
-                className={`grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 ${
-                  group.services.length >= 4 ? "lg:grid-cols-4" : group.services.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-2 lg:max-w-4xl lg:mx-auto"
-                }`}
-              >
-                {group.services.map((s, i) => (
-                  <Reveal key={s.id} delay={i * 80}>
-                    <ServiceCard
-                      serviceId={s.id}
-                      name={s.name}
-                      price={formatPrice(s)}
-                      description={s.description}
-                      image={s.image}
-                      focus={s.focus}
-                    />
+              {group.services.every((s) => !s.image) ? (
+                /* Text price list beside one representative photo */
+                <div className="grid md:grid-cols-[0.85fr_1.15fr] gap-8 lg:gap-12 items-center">
+                  {group.image && (
+                    <Reveal>
+                      <div className="relative mx-auto max-w-sm w-full aspect-[4/5] overflow-hidden rounded-3xl bg-secondary shadow-soft">
+                        <img src={group.image} alt={`${group.title} by Simi Aesthetic`} loading="lazy" decoding="async" className="h-full w-full object-cover object-[50%_35%]" />
+                      </div>
+                    </Reveal>
+                  )}
+                  <Reveal delay={100}>
+                    <ul className="rounded-3xl bg-white border border-border/70 shadow-soft divide-y divide-border/60">
+                      {group.services.map((s) => (
+                        <li key={s.id} className="p-6 sm:p-7 flex items-center justify-between gap-5">
+                          <div>
+                            <div className="flex items-baseline gap-3">
+                              <h3 className="font-heading text-xl sm:text-2xl text-foreground">{s.name}</h3>
+                              <span className="font-semibold text-foreground">{formatPrice(s)}</span>
+                            </div>
+                            <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{s.description}</p>
+                          </div>
+                          <Button asChild variant="blush" size="sm" className="shrink-0">
+                            <Link to={`/booking?service=${s.id}`}>
+                              Book <ArrowUpRight className="w-3.5 h-3.5" />
+                            </Link>
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
                   </Reveal>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div
+                  className={`grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 ${
+                    group.services.length >= 4 ? "lg:grid-cols-4" : group.services.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-2 lg:max-w-4xl lg:mx-auto"
+                  }`}
+                >
+                  {group.services.map((s, i) => (
+                    <Reveal key={s.id} delay={i * 80}>
+                      <ServiceCard
+                        serviceId={s.id}
+                        name={s.name}
+                        price={formatPrice(s)}
+                        description={s.description}
+                        image={s.image ?? ""}
+                        focus={s.focus}
+                      />
+                    </Reveal>
+                  ))}
+                </div>
+              )}
 
               {group.note && (
                 <p className="mt-8 mx-auto max-w-2xl flex items-start justify-center gap-2 rounded-2xl bg-secondary px-5 py-4 text-sm text-secondary-foreground">

@@ -15,6 +15,12 @@ import tattooScriptBow from "@/assets/work/tattoo-script-bow.jpg";
 import tattooButterfly from "@/assets/work/tattoo-butterfly.jpg";
 import lashWispyGlam from "@/assets/work/lash-wispy-glam.jpg";
 import stripLashBag from "@/assets/work/strip-lash-bag.jpg";
+import lashSpikyUnderEye from "@/assets/work/lash-spiky-under-eye.jpg";
+import lashBrowsCloseup from "@/assets/work/lash-brows-closeup.jpg";
+import browsLashesPink from "@/assets/work/brows-lashes-pink.jpg";
+import browsPowderCloseup from "@/assets/work/brows-powder-closeup.jpg";
+import lashWispyCurls from "@/assets/work/lash-wispy-curls.jpg";
+import browsHeadband from "@/assets/work/brows-headband.jpg";
 // Existing portfolio
 import lashVolume from "@/assets/lash-volume.jpg";
 import lashWispy from "@/assets/lash-wispy.jpg";
@@ -50,30 +56,37 @@ const vid = (src: string, title: string, category: GalleryCategory, width = 9, h
 
 export const galleryItems: GalleryItem[] = [
   // ——— New work ———
-  img(lashWispyGlam, "Wispy Glam Lashes", "Lashes", 960, 1280),
+  // Titles only name a specific service where the owner has confirmed it.
+  img(lashWispyGlam, "Lash Extensions", "Lashes", 960, 1280),
+  img(browsHeadband, "Brows", "Brows", 720, 1280),
   vid("/videos/lash-brow-glam.mp4", "Lashes & Brows Glam", "Lashes", 576, 1024, "/videos/lash-brow-glam-poster.jpg"),
-  img(heroBurgundy, "Mega Volume Glam", "Lashes", 933, 1280),
-  img(browsOmbre, "Ombré Brows", "Brows", 960, 1280),
-  vid("/videos/lash-glam-reveal.mp4", "Lash Glam Reveal", "Lashes", 576, 1024, "/videos/lash-glam-reveal-poster.jpg"),
+  img(studioFloral, "Cluster Hybrid × Wispy Set", "Lashes", 608, 1080),
+  img(lashWispyCurls, "Wispy Lashes & Brows", "Lashes", 986, 1280),
   img(tattooScriptBow, "Script & Bow Tattoo", "Tattoos", 720, 1280),
-  img(studioCurls, "Volume Set in the Studio", "Lashes", 810, 1080),
-  img(lashVolumeGlam, "Full Volume Set", "Lashes", 960, 1280),
-  img(browsShading, "Micro Shaded Brows", "Brows", 960, 1280),
-  img(lashHybridSmile, "Hybrid Set", "Lashes", 608, 1080),
+  img(heroBurgundy, "Glam Lashes", "Lashes", 933, 1280),
+  img(browsPowderCloseup, "Brows Close-Up", "Brows", 744, 1280),
+  img(lashSpikyUnderEye, "Spiky Lashes with Under Eye", "Lashes", 678, 1230),
+  vid("/videos/lash-glam-reveal.mp4", "Lash Glam Reveal", "Lashes", 576, 1024, "/videos/lash-glam-reveal-poster.jpg"),
+  img(browsOmbre, "Brows", "Brows", 960, 1280),
+  img(lashBrowsCloseup, "Lashes & Brows Close-Up", "Lashes", 1040, 1280),
   img(tattooButterfly, "Butterfly Ankle Tattoo", "Tattoos", 750, 1000),
+  img(studioCurls, "Lashes in the Studio", "Lashes", 810, 1080),
+  img(browsLashesPink, "Brows & Lashes", "Brows", 823, 828),
   vid("/videos/tattoo-aftercare.mp4", "Fresh Script Tattoo", "Tattoos", 576, 1024, "/videos/tattoo-aftercare-poster.jpg"),
+  img(lashVolumeGlam, "Full Lash Look", "Lashes", 960, 1280),
+  img(browsShading, "Brows & Lashes", "Brows", 960, 1280),
+  img(lashHybridSmile, "Lash Set", "Lashes", 608, 1080),
   vid("/videos/butterfly-tattoo.mp4", "Butterfly Thigh Tattoo", "Tattoos", 576, 1024, "/videos/butterfly-tattoo-poster.jpg"),
   img(stripLashBag, "Simi Aesthetic Strip Lash", "Lashes", 960, 1280),
   img(lashWispySpikes, "Wispy Spike Lashes", "Lashes", 608, 1080),
-  img(studioFloral, "Customized Lash Set", "Lashes", 608, 1080),
-  img(lashClassicNatural, "Natural Lash Set", "Lashes", 720, 1280),
+  img(lashClassicNatural, "Natural Lash Extensions", "Lashes", 720, 1280),
   img(lashBrowsSoft, "Soft Lashes & Brows", "Brows", 720, 1280),
   img(lashMapping, "Lash Mapping & Under Eye", "Lashes", 960, 1280),
   img(lashApplication, "In the Chair — Lash Application", "Lashes", 589, 1208),
 
   // ——— Existing portfolio ———
-  img(lashVolume, "Volume Close-Up", "Lashes", 736, 915),
-  img(lashWispy, "Wispy Lashes", "Lashes", 820, 1080),
+  img(lashVolume, "Lash Extensions Close-Up", "Lashes", 736, 915),
+  img(lashWispy, "Spiky Lash Extensions", "Lashes", 820, 1080),
   img(tattooNeck, "'Beautiful Mind' Neck", "Tattoos", 706, 1080),
   img(tattooBodyNew, "Script Side Tattoo", "Tattoos", 812, 1080),
   img(tattooThighNew, "Thigh Script", "Tattoos", 1080, 942),

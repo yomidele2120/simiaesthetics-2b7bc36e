@@ -11,6 +11,7 @@ const navLinks = [
   { name: "Brows", path: "/brows" },
   { name: "Tattoos", path: "/tattoos" },
   { name: "Gallery", path: "/gallery" },
+  { name: "Reviews", path: "/reviews" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -51,14 +52,14 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-9">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-8">
             {navLinks.map((link) => {
               const active = location.pathname === link.path;
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`relative text-[0.75rem] xl:text-[0.8rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-primary ${
+                  className={`relative text-[0.72rem] xl:text-[0.78rem] font-semibold uppercase tracking-[0.12em] transition-colors duration-300 hover:text-primary ${
                     active ? "text-primary" : "text-foreground/70"
                   }`}
                 >

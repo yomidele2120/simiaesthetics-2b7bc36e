@@ -36,8 +36,9 @@ const Policies = () => {
                   Walk-ins are not guaranteed and depend on availability.
                 </p>
                 <p>
-                  A confirmation will be sent via WhatsApp or phone after your booking request 
-                  is reviewed. Payment details will be provided upon confirmation.
+                  Payment is made by bank transfer when you book on our website — the account
+                  details are shown on the booking page. Send your payment receipt with your booking
+                  on WhatsApp, and we'll confirm your appointment there.
                 </p>
                 <p>
                   Please arrive on time for your appointment. Late arrivals may result in 

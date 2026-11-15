@@ -1,10 +1,12 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
-import { CalendarDays, Clock, User, MessageSquare, Sparkles, Check, Send, Info } from "lucide-react";
+import { CalendarDays, Clock, User, MessageSquare, Sparkles, Check, Send, Info, Upload } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { serviceGroups, findService, formatPrice, serviceLabel } from "@/data/services";
+import { serviceGroups, findService, formatPrice, formatNaira, serviceLabel } from "@/data/services";
+import { PAYMENT, paymentEnabled } from "@/config/payment";
+import { PaymentStep } from "@/components/booking/PaymentStep";
 import { buildBookingMessage, buildWhatsAppUrl, openWhatsApp } from "@/lib/whatsapp";
 
 const timeSlots = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
@@ -16,7 +18,9 @@ const legacyIds: Record<string, string> = {
   "extra-removal": "addon-removal",
 };
 
-type Errors = Partial<Record<"service" | "name" | "date" | "time", string>>;
+type Errors = Partial<Record<"service" | "name" | "date" | "time" | "receipt", string>>;
+
+const MAX_RECEIPT_MB = 10;
 
 const todayISO = () => {
   const d = new Date();
@@ -50,6 +54,10 @@ const Booking = () => {
   const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [sentUrl, setSentUrl] = useState<string | null>(null);
+  const [receipt, setReceipt] = useState<File | null>(null);
+  const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [receiptShared, setReceiptShared] = useState(false);
+  const payNow = paymentEnabled();
 
   // Pre-select a service when arriving from a "Book" button
   useEffect(() => {
@@ -61,6 +69,26 @@ const Booking = () => {
   const service = findService(serviceId);
   const minDate = useMemo(todayISO, []);
 
+  // Preview for image receipts; free the memory when replaced
+  useEffect(() => {
+    if (!receipt || !receipt.type.startsWith("image/")) {
+      setReceiptPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(receipt);
+    setReceiptPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [receipt]);
+
+  const amountDue = service ? (PAYMENT.depositAmount ?? service.amount) : 0;
+  const amountLabel = service
+    ? PAYMENT.depositAmount != null
+      ? "Booking deposit"
+      : service.from
+        ? "Starting price"
+        : "Service price"
+    : "";
+
   const message = useMemo(() => {
     if (!service) return "";
     return buildBookingMessage({
@@ -70,8 +98,9 @@ const Booking = () => {
       date: date ? format(parseLocalDate(date), "EEEE, d MMMM yyyy") : "—",
       time: time || "—",
       notes,
+      amountPaid: payNow ? formatNaira(amountDue) : undefined,
     });
-  }, [service, name, date, time, notes]);
+  }, [service, name, date, time, notes, payNow, amountDue]);
 
   const validate = (): Errors => {
     const e: Errors = {};
@@ -80,6 +109,7 @@ const Booking = () => {
     if (!date) e.date = "Please choose a date.";
     else if (date < minDate) e.date = "Please choose today or a future date.";
     if (!time) e.time = "Please choose a time.";
+    if (payNow && !receipt) e.receipt = "Please upload your payment receipt.";
     return e;
   };
 
@@ -106,6 +136,37 @@ const Booking = () => {
     setTime("");
     setNotes("");
     setErrors({});
+    setReceipt(null);
+    setReceiptShared(false);
+  };
+
+  const onReceiptChange = (file: File | undefined) => {
+    if (!file) return;
+    const okType = file.type.startsWith("image/") || file.type === "application/pdf";
+    if (!okType) {
+      setErrors((p) => ({ ...p, receipt: "Please upload an image (JPG/PNG) or PDF." }));
+      return;
+    }
+    if (file.size > MAX_RECEIPT_MB * 1024 * 1024) {
+      setErrors((p) => ({ ...p, receipt: `File is too large — maximum ${MAX_RECEIPT_MB}MB.` }));
+      return;
+    }
+    setReceipt(file);
+    setErrors((p) => ({ ...p, receipt: undefined }));
+  };
+
+  // Phones can share the receipt file straight into WhatsApp via the share menu
+  const canShareReceipt =
+    !!receipt && typeof navigator !== "undefined" && !!navigator.canShare && navigator.canShare({ files: [receipt] });
+
+  const shareReceipt = async () => {
+    if (!receipt) return;
+    try {
+      await navigator.share({ files: [receipt], title: "Payment receipt" });
+      setReceiptShared(true);
+    } catch {
+      /* user closed the share menu */
+    }
   };
 
   // ——— After submitting ———
@@ -118,11 +179,44 @@ const Booking = () => {
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-foreground flex items-center justify-center">
                 <WhatsAppIcon className="w-10 h-10 text-background" />
               </div>
-              <h1 className="font-heading text-3xl sm:text-4xl text-foreground">One last step — tap Send</h1>
-              <p className="mt-4 text-muted-foreground leading-relaxed">
-                WhatsApp has opened with your booking message ready. <strong className="text-foreground">Your booking is
-                not sent until you tap the Send button inside WhatsApp.</strong> We'll reply there to confirm your appointment.
-              </p>
+              <h1 className="font-heading text-3xl sm:text-4xl text-foreground">
+                {payNow ? "Two quick steps in WhatsApp" : "One last step — tap Send"}
+              </h1>
+              {!payNow ? (
+                <p className="mt-4 text-muted-foreground leading-relaxed">
+                  WhatsApp has opened with your booking message ready. <strong className="text-foreground">Your booking is
+                  not sent until you tap the Send button inside WhatsApp.</strong> We'll reply there to confirm your appointment.
+                </p>
+              ) : (
+                <ol className="mt-8 space-y-4 text-left">
+                  <li className="rounded-2xl bg-white border border-border p-5">
+                    <p className="font-semibold text-foreground">1. Send your booking details</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      WhatsApp has opened with your booking message ready — <strong className="text-foreground">tap Send</strong>.
+                    </p>
+                  </li>
+                  <li className="rounded-2xl bg-white border border-border p-5">
+                    <p className="font-semibold text-foreground">2. Send your payment receipt</p>
+                    {canShareReceipt ? (
+                      <>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Tap the button, choose <strong className="text-foreground">WhatsApp</strong>, then pick the Simi Aesthetic chat
+                          (it will be at the top of your chats) and send.
+                        </p>
+                        <Button variant="hero" className="mt-4 w-full" onClick={shareReceipt}>
+                          {receiptShared ? <Check className="w-4 h-4" /> : <Upload className="w-4 h-4" />}
+                          {receiptShared ? "Receipt shared — share again" : "Send receipt to WhatsApp"}
+                        </Button>
+                      </>
+                    ) : (
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        In the WhatsApp chat, tap the <strong className="text-foreground">📎 attach</strong> button and send the receipt
+                        you uploaded{receipt ? <> (<span className="text-foreground">{receipt.name}</span>)</> : null}.
+                      </p>
+                    )}
+                  </li>
+                </ol>
+              )}
               <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <Button asChild variant="whatsapp" size="lg">
                   <a href={sentUrl} target="_blank" rel="noopener noreferrer">
@@ -133,6 +227,10 @@ const Booking = () => {
                   Book another service
                 </Button>
               </div>
+              <p className="mt-8 text-sm text-muted-foreground">
+                Been here before?{" "}
+                <a href="/reviews#write" className="font-semibold text-foreground underline underline-offset-4">Leave us a review</a>
+              </p>
             </div>
           </div>
         </section>
@@ -290,12 +388,34 @@ const Booking = () => {
                 />
               </div>
 
+              {/* Payment by bank transfer */}
+              {payNow && (
+                <div className="border-t border-border pt-8">
+                  <PaymentStep
+                    amount={service ? amountDue : null}
+                    amountLabel={amountLabel}
+                    amountNote={
+                      service?.from && PAYMENT.depositAmount == null
+                        ? "Tattoo prices vary with size and design — this is the starting price; any balance is paid at your appointment."
+                        : undefined
+                    }
+                    receipt={receipt}
+                    receiptPreview={receiptPreview}
+                    error={errors.receipt}
+                    maxMb={MAX_RECEIPT_MB}
+                    onReceipt={onReceiptChange}
+                    onRemoveReceipt={() => setReceipt(null)}
+                  />
+                </div>
+              )}
+
               {/* Important notice */}
               <div className="flex items-start gap-3 rounded-2xl border border-border bg-secondary px-4 py-4 text-sm text-foreground/80">
                 <Info className="w-5 h-5 mt-0.5 shrink-0 text-foreground" />
                 <p>
                   Tapping the button below opens WhatsApp with your booking message already written.{" "}
                   <strong className="text-foreground">You still need to tap Send in WhatsApp</strong> for us to receive it.
+                  {payNow && " You'll then send your receipt in the same chat — we'll show you how."}
                 </p>
               </div>
 
@@ -314,6 +434,7 @@ const Booking = () => {
                     ["Price", service ? formatPrice(service) : "—"],
                     ["Date", date ? format(parseLocalDate(date), "EEE, d MMM yyyy") : "—"],
                     ["Time", time || "—"],
+                    ...(payNow ? [["To pay", service ? formatNaira(amountDue) : "—"]] : []),
                   ].map(([k, v]) => (
                     <div key={k} className="flex justify-between gap-4 border-b border-white/10 pb-3 last:border-0">
                       <dt className="text-white/60">{k}</dt>

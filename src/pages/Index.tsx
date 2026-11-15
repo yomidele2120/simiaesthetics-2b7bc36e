@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { Reveal } from "@/components/Reveal";
 import { PriceMenu } from "@/components/PriceMenu";
+import { ReviewCard, useReviews } from "@/components/reviews/Reviews";
 import { MapPin, Sparkles, Heart, Star, ArrowRight, CalendarHeart, Send, ListChecks } from "lucide-react";
 import { BUSINESS } from "@/config/business";
 import { startingPrice, formatNaira } from "@/data/services";
@@ -11,7 +12,7 @@ import heroImage from "@/assets/work/studio-room.jpg";
 import lashesCover from "@/assets/work/lash-volume-glam.jpg";
 import browsCover from "@/assets/work/brows-ombre.jpg";
 import tattoosCover from "@/assets/work/tattoo-script-bow.jpg";
-import clusterCover from "@/assets/work/lash-wispy-glam.jpg";
+import clusterCover from "@/assets/work/studio-floral.jpg";
 
 const categories = [
   {
@@ -63,6 +64,7 @@ const steps = [
 const previewItems = galleryItems.filter((i) => i.type === "image").slice(0, 8);
 
 const Index = () => {
+  const reviews = useReviews();
   return (
     <Layout>
       {/* ——— Hero ——— */}
@@ -271,6 +273,42 @@ const Index = () => {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ——— Reviews ——— */}
+      <section className="py-20 lg:py-28 bg-[#f6f6f6]">
+        <div className="container mx-auto px-5 lg:px-8">
+          <Reveal className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+            <div>
+              <span className="eyebrow">Client Reviews</span>
+              <h2 className="section-title mt-4">What our clients say</h2>
+            </div>
+            <div className="flex gap-3">
+              {reviews && reviews.length > 3 && (
+                <Button asChild variant="outline">
+                  <Link to="/reviews">All reviews</Link>
+                </Button>
+              )}
+              <Button asChild variant="blush">
+                <Link to="/reviews#write">Write a review</Link>
+              </Button>
+            </div>
+          </Reveal>
+          {reviews && reviews.length > 0 ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              {reviews.slice(0, 3).map((r, i) => (
+                <Reveal key={`${r.name}-${i}`} delay={i * 100}>
+                  <ReviewCard review={r} />
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">
+              Visited us recently? We'd love to hear about your experience —{" "}
+              <Link to="/reviews#write" className="font-semibold text-foreground underline underline-offset-4">leave a review</Link>.
+            </p>
+          )}
         </div>
       </section>
 

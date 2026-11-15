@@ -10,6 +10,7 @@ import ClusterLashes from "./pages/ClusterLashes";
 import Brows from "./pages/Brows";
 import Tattoos from "./pages/Tattoos";
 import Gallery from "./pages/Gallery";
+import Reviews from "./pages/Reviews";
 import Contact from "./pages/Contact";
 import Booking from "./pages/Booking";
 import Policies from "./pages/Policies";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/brows" element={<Brows />} />
           <Route path="/tattoos" element={<Tattoos />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/reviews" element={<Reviews />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/policies" element={<Policies />} />

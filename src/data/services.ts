@@ -4,9 +4,7 @@
  * Update a price here and it changes on the home page, the service pages
  * and the WhatsApp booking form at the same time.
  */
-import lashClassicNatural from "@/assets/work/lash-classic-natural.jpg";
 import lashHybridSmile from "@/assets/work/lash-hybrid-smile.jpg";
-import lashVolumeGlam from "@/assets/work/lash-volume-glam.jpg";
 import heroBurgundy from "@/assets/work/hero-burgundy.jpg";
 import lashBrowsSoft from "@/assets/work/lash-brows-soft.jpg";
 import studioFloral from "@/assets/work/studio-floral.jpg";
@@ -19,7 +17,8 @@ import browsShading from "@/assets/work/brows-shading.jpg";
 import tattooButterfly from "@/assets/work/tattoo-butterfly.jpg";
 import tattooScriptBow from "@/assets/work/tattoo-script-bow.jpg";
 import lashWispyGlam from "@/assets/work/lash-wispy-glam.jpg";
-import lashCluster from "@/assets/lash-cluster.jpg";
+// Note: despite the filename, this photo is a normal lash extension set (confirmed by the owner)
+import lashNaturalWhite from "@/assets/lash-cluster.jpg";
 import lashVolumeClose from "@/assets/lash-volume.jpg";
 import lashWispyClose from "@/assets/lash-wispy.jpg";
 
@@ -33,7 +32,8 @@ export interface Service {
   /** True when the price is a starting price ("From ₦…"). */
   from?: boolean;
   description: string;
-  image: string;
+  /** Optional — services without a confirmed photo show as text cards. */
+  image?: string;
   /** CSS object-position so faces / work stay in frame when cropped. */
   focus?: string;
 }
@@ -44,6 +44,8 @@ export interface ServiceGroup {
   subtitle: string;
   category: ServiceCategoryId;
   note?: string;
+  /** Photo representing the whole group (used when services have no photo). */
+  image?: string;
   /** Add-ons are extras, so they're excluded from "From ₦…" starting prices. */
   addOn?: boolean;
   services: Service[];
@@ -59,10 +61,10 @@ export const serviceGroups: ServiceGroup[] = [
     subtitle: "Our signature full sets, applied lash by lash.",
     category: "lashes",
     services: [
-      { id: "normal-classic", name: "Classic Set", amount: 13000, description: "Soft, natural everyday lashes — one extension per natural lash.", image: lashClassicNatural, focus: "50% 40%" },
-      { id: "normal-hybrid", name: "Hybrid Set", amount: 17000, description: "A blend of classic and volume for a fuller yet natural finish.", image: lashHybridSmile, focus: "50% 40%" },
-      { id: "normal-volume", name: "Volume Set", amount: 20000, description: "Full, fluffy lashes for a beautifully dense look.", image: lashVolumeGlam, focus: "50% 35%" },
-      { id: "normal-mega", name: "Mega Volume", amount: 30000, description: "Ultra-dramatic, high-density lashes for maximum impact.", image: heroBurgundy, focus: "50% 30%" },
+      { id: "normal-classic", name: "Classic Set", amount: 13000, description: "Soft, natural everyday lashes — one extension per natural lash.", image: lashNaturalWhite, focus: "50% 40%" },
+      { id: "normal-hybrid", name: "Hybrid Set", amount: 17000, description: "A blend of classic and volume for a fuller yet natural finish.", image: lashWispyGlam, focus: "50% 35%" },
+      { id: "normal-volume", name: "Volume Set", amount: 20000, description: "Full, fluffy lashes for a beautifully dense look.", image: lashVolumeClose, focus: "50% 40%" },
+      { id: "normal-mega", name: "Mega Volume", amount: 30000, description: "Ultra-dramatic, high-density lashes for maximum impact.", image: lashWispyClose, focus: "50% 50%" },
     ],
   },
   {
@@ -72,9 +74,9 @@ export const serviceGroups: ServiceGroup[] = [
     category: "lashes",
     services: [
       { id: "custom-classic", name: "Classic Set", amount: 15000, description: "A tailored classic set mapped to flatter your eye shape.", image: lashBrowsSoft, focus: "50% 35%" },
-      { id: "custom-hybrid", name: "Hybrid Set", amount: 25000, description: "Customized hybrid styling for a signature soft-glam look.", image: studioFloral, focus: "50% 35%" },
+      { id: "custom-hybrid", name: "Hybrid Set", amount: 25000, description: "Customized hybrid styling for a signature soft-glam look.", image: lashHybridSmile, focus: "50% 40%" },
       { id: "custom-volume", name: "Volume Set", amount: 30000, description: "Hand-crafted volume fans designed around you.", image: studioCurls, focus: "50% 30%" },
-      { id: "custom-mega", name: "Mega Volume", amount: 40000, description: "Our boldest custom set — maximum density, fully personalised.", image: lashWispySpikes, focus: "50% 35%" },
+      { id: "custom-mega", name: "Mega Volume", amount: 40000, description: "Our boldest custom set — maximum density, fully personalised.", image: heroBurgundy, focus: "50% 30%" },
     ],
   },
   {
@@ -93,12 +95,13 @@ export const serviceGroups: ServiceGroup[] = [
     id: "cluster-lashes",
     title: "Cluster Lashes",
     subtitle: "Quick, lightweight cluster application — a beautiful look at a lighter price.",
+    image: studioFloral,
     category: "cluster",
     services: [
-      { id: "cluster-classic", name: "Classic Set", amount: 5000, description: "Soft, natural clusters for an easy everyday lift.", image: lashCluster, focus: "50% 40%" },
-      { id: "cluster-hybrid", name: "Hybrid", amount: 9000, description: "A fuller, textured cluster look that still feels light.", image: lashWispyGlam, focus: "50% 35%" },
-      { id: "cluster-volume", name: "Volume", amount: 13000, description: "Dense, fluffy clusters for a bold, glam finish.", image: lashVolumeClose, focus: "50% 40%" },
-      { id: "cluster-mega", name: "Mega Volume", amount: 16000, description: "Our most dramatic cluster set for maximum impact.", image: lashWispyClose, focus: "50% 50%" },
+      { id: "cluster-classic", name: "Classic Set", amount: 5000, description: "Soft, natural clusters for an easy everyday lift." },
+      { id: "cluster-hybrid", name: "Hybrid", amount: 9000, description: "A fuller, textured cluster look that still feels light." },
+      { id: "cluster-volume", name: "Volume", amount: 13000, description: "Dense, fluffy clusters for a bold, glam finish." },
+      { id: "cluster-mega", name: "Mega Volume", amount: 16000, description: "Our most dramatic cluster set for maximum impact." },
     ],
   },
   {
